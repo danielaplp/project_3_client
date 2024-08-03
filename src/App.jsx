@@ -1,34 +1,42 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import Homepage from './pages/Homepage';
+import Parkings from './pages/Parkings';
+import CycleRoutes from './pages/AddCycleRoute';
+import Zones30 from './pages/Zones30';
+import AddCycleRoute from './pages/AddCycleRoute';
+import AddZone30 from './pages/AddZone30';
+import AddParking from './pages/AddParking';
+import SignUp from './pages/Auth/SignUp';
+import Login from './pages/Auth/Login';
+import Anon from './components/Anon';
+import Navbar from './components/Navbar';
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      <div className='App'>
+        <Navbar />
+        <Routes>
+        <Route path='/' element={<Homepage/>}/>
+        <Route path='/cycleroutes' element={<CycleRoutes/>}/>
+        <Route path='/cycleroutes/new' element={<AddCycleRoute/>}/>
+        <Route path='/zone30' element={<Zones30/>}/>
+        <Route path='/zone30/new' element={<AddZone30/>}/>
+        <Route path='/parking' element={<Parkings/>}/>
+        <Route path='/parking/new' element={<AddParking/>}/>
+        <Route path='/signup' element={
+          <Anon>
+          <SignUp/>
+          </Anon>}/>
+        <Route path='/login' element={
+          <Anon>
+          <Login/>
+          </Anon>}/>
+
+        </Routes>
+       
+    </div>
   )
 }
 
