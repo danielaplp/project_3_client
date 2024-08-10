@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Homepage from './pages/Homepage';
 import Parkings from './pages/Parkings';
-import CycleRoutes from './pages/AddCycleRoute';
+import CycleRoutes from './pages/CycleRoutes';
 import Zones30 from './pages/Zones30';
 import AddCycleRoute from './pages/AddCycleRoute';
 import AddZone30 from './pages/AddZone30';
@@ -11,6 +11,7 @@ import Login from './pages/Auth/Login';
 import Anon from './components/Anon';
 import Navbar from './components/Navbar';
 import './App.css'
+import { Routes, Route } from "react-router-dom"
 
 function App() {
 

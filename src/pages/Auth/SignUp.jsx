@@ -8,7 +8,7 @@ const [name, setName] = useState("");
 const [email, setEmail] = useState("");
 const [password, setPassword] = useState("");
 const [errorMessage, setErrorMessage] = useState(null);
-const [loading, setLoading] = useState(false);
+
 
 
 const navigate = useNavigate();
@@ -19,6 +19,15 @@ const handlePassword = (event) => setPassword(event.target.value);
 
 const handleSubmit = async (event) => {
     event.preventDefault()
+
+    try {
+
+ 
+       await axios.post(`${import.meta.env.VITE_API_URL}/auth/signup`, {name, email, password});
+       navigate('/login'); 
+    } catch (error) {
+        setErrorMessage(error.response.data.message);
+    }
 
 };
 
@@ -36,7 +45,7 @@ const handleSubmit = async (event) => {
             <input type="password" name='password' id='password' value={password} onChange={handlePassword}/>
 
 
-            <button type='submit' disabled={loading}>Sign up</button>
+            <button type='submit' >Sign up</button>
 
         </form>
 
