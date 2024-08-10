@@ -8,7 +8,19 @@ import CycleAPIService from '../services/cycle.api';
 const cycleService = new CycleAPIService();
 
 function CycleRoutes() {
-  const [cycleroutes, setCycleRoutes] = useState([]);
+const [cycleroutes, setCycleRoutes] = useState([]);
+const [editMode, setEditMode] = useState(false);
+const [editData, setEditData] = useState({
+  _id: '',
+  type: '',
+  startLocation: { lat: '', lng: '' },
+  endLocation: { lat: '', lng: '' },
+});
+
+const handleEditClick = (cycleroute) => {
+  setEditData(cycleroute);
+  setEditMode(true);
+};
 
   const fetchData = async () => {
     try {
@@ -29,17 +41,32 @@ const deleteHandler = async (_id) => {
   }
 };
 
+const updateHandler = async (e) => {
+  e.preventDefault();
+  try {
+    const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/cycleroutes/${editData._id}`, editData);
+    setCycleRoutes(cycleroutes.map(route => 
+      route._id === editData._id ? response.data : route
+    ));
+    setEditMode(false);
+    console.log(`Cycle Route with ID ${editData._id} updated`);
+  } catch (error) {
+    console.log('Error of editing cycleroute:', error);
+  }
+};
 
 
-const updateHandler = async (_id) => {
+
+/* const updateHandler = async (_id) => {
   try {
     await axios.put(`${import.meta.env.VITE_API_URL}/api/cycleroutes/${_id}`);
     setCycleRoutes(cycleroutes.filter(b => b._id !== _id));
+    
     console.log(`Cycle Route with ID ${_id} updated`);
   } catch (error) {
     console.log('Error of editing cycleroute:', error);
   }
-}
+} */
 
 useEffect(() => {
 console.log('useEffect: Mounting')
@@ -64,7 +91,8 @@ fetchData();
                         <p>{cycleroute.endLocation?.lat}</p>
                         <p>{cycleroute.endLocation?.lng}</p>
                         <button onClick={() => deleteHandler(cycleroute._id)}>Delete</button>
-                        <button onClick={() => updateHandler(cycleroute._id)}>Edit</button>
+                        {/* <button onClick={() => updateHandler(cycleroute._id)}>Edit</button> */}
+                        <button onClick={() => handleEditClick(cycleroute)}>Edit</button>
                         </div>
                 );
                 

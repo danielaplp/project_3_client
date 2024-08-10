@@ -5,7 +5,7 @@ import CycleAPIService from '../services/cycle.api';
 
 
 
-function AddCycleRoute() {
+function EditCycleRoute() {
   const [cycleroutes, setCycleRoutes] = useState([]);
   const [type, setType] = useState("")
   const [startLocation, setStartLocation] = useState("")
@@ -30,7 +30,7 @@ const handleSubmit = async (event) => {
           type, startLocation, endLocation
       }
 
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/cycleroutes`, cycleRoute)
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/cycleroutes`, cycleRoute)
       
 
 
@@ -49,7 +49,7 @@ const handleSubmit = async (event) => {
 
   return (
     <div>
-        <h2>Add Cycle Route</h2>
+        <h2>Edit Cycle Route</h2>
         <form onSubmit={handleSubmit}>
                 <label>Type</label>
                 <input type="text" name="type" value={type} onChange={handleType} />
@@ -58,7 +58,7 @@ const handleSubmit = async (event) => {
                 <textarea itemType="text" name="start location" value={startLocation} onChange={handleStartLocation}></textarea>
                 <label>End Location</label>
                 <textarea itemType="text" name="end location" value={endLocation} onChange={handleEndLocation}></textarea>
-                <button type="submit">Add Cycle Route</button>
+                <button type="submit">Edit Cycle Route</button>
                 </form>
               
                 
@@ -67,8 +67,4 @@ const handleSubmit = async (event) => {
   )
 }
 
-export default AddCycleRoute
-
-
-
-
+export default EditCycleRoute
