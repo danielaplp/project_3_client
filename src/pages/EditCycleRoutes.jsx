@@ -1,25 +1,58 @@
-import { useState } from "react";
-import axios from 'axios';
-import { useNavigate} from "react-router-dom";
-import CycleAPIService from '../services/cycle.api';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate, useParams, Link } from "react-router-dom";
 
+import CycleAPIService from "../services/cycle.api";
 
+const cycleService = new CycleAPIService();
 
 function EditCycleRoute() {
-  const [cycleroutes, setCycleRoutes] = useState([]);
+  const { cycleRoutetId } = useParams();
+  console.log(cycleRoutetId);
+
+  const [cycleroute, setCycleRoute] = useState(null);
   const [type, setType] = useState("")
-  const [startLocation, setStartLocation] = useState("")
-  const [endLocation, setEndLocation] = useState("")
-  const navigate = useNavigate()
+  const [startLocationLat, setStartLocationLat] = useState(0)
+  const [startLocationLng, setStartLocationLng] = useState(0)
+  const [endLocationLat, setEndLocationLat] = useState(0)
+  const [endLocationLng, setEndLocationLng] = useState(0)
+
+  const navigate = useNavigate();
+  //
+  const getSingleCycleRoute = async _id => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/cycleroutes/${_id}`,
+      );
+      setCycleRoute(response.data);
+      setType(response.data.type)
+      setStartLocationLat(response.data.startLocation.lat)
+      setStartLocationLng(response.data.startLocation.lng)
+      console.log(response.data);
+    } catch (error) {
+      console.log("error fetching the cycleroute", error);
+    }
+  };
+  useEffect(() => {
+    getSingleCycleRoute(cycleRoutetId);
+  }, [cycleRoutetId]);
+
+
 
   const handleType = (event) => {
     setType(event.target.value)
 }
-const handleStartLocation = (event) => {
-  setStartLocation(event.target.value)
+const handleStartLocationLat = (event) => {
+  setStartLocationLat(event.target.value)
 }
-const handleEndLocation = (event) => {
-  setEndLocation(event.target.value)
+const handleStartLocationLng = (event) => {
+  setStartLocationLng(event.target.value)
+}
+const handleEndLocationLat = (event) => {
+  setEndLocationLat(event.target.value)
+}
+const handleEndLocationLng = (event) => {
+  setEndLocationLng(event.target.value)
 }
 
 const handleSubmit = async (event) => {
@@ -27,11 +60,14 @@ const handleSubmit = async (event) => {
 
   try {
       const cycleRoute ={
-          type, startLocation, endLocation
+          type, startLocation: {
+            lat: startLocationLat,
+            lng: startLocationLng
+          }, endLocation
       }
 
-      await axios.put(`${import.meta.env.VITE_API_URL}/api/cycleroutes`, cycleRoute)
-      
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/cycleroutes/${cycleRoutetId}`, cycleRoute)
+
 
 
       navigate("/cycleroutes")
@@ -44,27 +80,80 @@ const handleSubmit = async (event) => {
   }
 }
 
+const deleteHandler = async (_id) => {
+  try {
+    await axios.delete(`${import.meta.env.VITE_API_URL}/api/cycleroutes/${_id}`);
+    set(cycleRoutes.filter(b => b._id !== _id));
+    console.log(`Cycle Route com ID ${_id} excluída com sucesso`);
+  } catch (error) {
+    console.log('Erro ao excluir a cycleroute:', error);
+  }
+};
 
+  /* 
+  return (
+    <div>
+      <h1>Cycle Routes</h1>
+      <Link to="/cycleroutes">
+        <button>Cycle Route</button>
+      </Link>
+      {cycleroute && (
+        <div key={cycleroute._id}>
+          <Link to={`/cycleroutes/${cycleroute._id}`}>
+            <h2>{cycleroute.type}</h2>
+          </Link>
+          <p>{cycleroute.startLocation?.lat || "No Lat"}</p>
+          <p>{cycleroute.startLocation?.lng || "No Lng"}</p>
+          <p>{cycleroute.endLocation?.lat || "No Lat"}</p>
+          <p>{cycleroute.endLocation?.lng || "No Lng"}</p>
 
+          {/* <button onClick={() => updateHandler(cycleroute._id)}>Edit</button> }
+          <button onClick={() => EditHandler(cycleroute._id)}>Edit</button>
+        </div>
+      )}
+    </div>
+  ); */
 
   return (
     <div>
-        <h2>Edit Cycle Route</h2>
-        <form onSubmit={handleSubmit}>
-                <label>Type</label>
-                <input type="text" name="type" value={type} onChange={handleType} />
+      <h2>edit Cycle Route</h2>
+      <form onSubmit={handleSubmit}>
+        <label>Type</label>
+        <input
+          type="text"
+          name="type"
+          value={type}
+          onChange={handleType}
+        />
 
-                <label>Start Location</label>
-                <textarea itemType="text" name="start location" value={startLocation} onChange={handleStartLocation}></textarea>
-                <label>End Location</label>
-                <textarea itemType="text" name="end location" value={endLocation} onChange={handleEndLocation}></textarea>
-                <button type="submit">Edit Cycle Route</button>
-                </form>
-              
-                
+        <label>Start Location</label>
+        <input
+          type="number"
+          name="start location"
+          value={startLocationLat}
+          onChange={handleStartLocationLat}></input>
+        <input
+          type="number"
+          name="start location"
+          value={startLocationLng}
+          onChange={handleStartLocationLng}></input>
 
+        <label>End Location</label>
+        <input
+        type= "number"
+          name="end location"
+          value={endLocationLat}
+          onChange={handleEndLocationLat}></input>
+        <input
+        type= "number"
+          name="end location"
+          value={endLocationLng}
+          onChange={handleEndLocationLng}></input>
+
+        <button type="submit">Edit Cycle Route</button>
+      </form>
     </div>
-  )
+  );
 }
 
-export default EditCycleRoute
+export default EditCycleRoute;

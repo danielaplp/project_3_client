@@ -1,31 +1,22 @@
 import React from 'react'
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react";
 import axios from 'axios'
+
 import CycleAPIService from '../services/cycle.api';
 
 
 const cycleService = new CycleAPIService();
 
 function CycleRoutes() {
-const [cycleroutes, setCycleRoutes] = useState([]);
-const [editMode, setEditMode] = useState(false);
-const [editData, setEditData] = useState({
-  _id: '',
-  type: '',
-  startLocation: { lat: '', lng: '' },
-  endLocation: { lat: '', lng: '' },
-});
-
-const handleEditClick = (cycleroute) => {
-  setEditData(cycleroute);
-  setEditMode(true);
-};
+const [cycleRoutes, setCycleRoutes] = useState([]);
+const navigate = useNavigate();
 
   const fetchData = async () => {
     try {
        const response = await cycleService.getAllCycleRoutes()
        setCycleRoutes(response.data) 
+       console.log(response.data)
     } catch (error) {
         console.error(error)
     }
@@ -34,39 +25,24 @@ const handleEditClick = (cycleroute) => {
 const deleteHandler = async (_id) => {
   try {
     await axios.delete(`${import.meta.env.VITE_API_URL}/api/cycleroutes/${_id}`);
-    setCycleRoutes(cycleroutes.filter(b => b._id !== _id));
+    setCycleRoutes(cycleRoutes.filter(b => b._id !== _id));
     console.log(`Cycle Route with ID ${_id} deleted`);
   } catch (error) {
     console.log('Error of deleting cycleroute:', error);
   }
 };
 
-const updateHandler = async (e) => {
-  e.preventDefault();
-  try {
-    const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/cycleroutes/${editData._id}`, editData);
-    setCycleRoutes(cycleroutes.map(route => 
-      route._id === editData._id ? response.data : route
-    ));
-    setEditMode(false);
-    console.log(`Cycle Route with ID ${editData._id} updated`);
-  } catch (error) {
-    console.log('Error of editing cycleroute:', error);
-  }
-};
-
-
-
-/* const updateHandler = async (_id) => {
-  try {
+const EditHandler = async (_id) => {
+  navigate(`/cycleroutes/edit/${_id}`);
+  /* try {
     await axios.put(`${import.meta.env.VITE_API_URL}/api/cycleroutes/${_id}`);
     setCycleRoutes(cycleroutes.filter(b => b._id !== _id));
-    
     console.log(`Cycle Route with ID ${_id} updated`);
   } catch (error) {
     console.log('Error of editing cycleroute:', error);
-  }
-} */
+  } */
+};
+
 
 useEffect(() => {
 console.log('useEffect: Mounting')
@@ -80,19 +56,19 @@ fetchData();
             <Link to= '/cycleroutes'>
             <button>Cycle Route</button>
             </Link>
-            {cycleroutes.map(cycleroute => {
+            {cycleRoutes.map(cycleroute => {
                 return (
                     <div key={cycleroute._id}>
                         <Link to={`/cycleroutes/${cycleroute._id}`}>
                         <h2>{cycleroute.type}</h2>
                         </Link>
-                        <p>{cycleroute.startLocation?.lat}</p>
-                        <p>{cycleroute.startLocation?.lng}</p>
-                        <p>{cycleroute.endLocation?.lat}</p>
-                        <p>{cycleroute.endLocation?.lng}</p>
+                        <p>{cycleroute.startLocation?.lat || 'No Lat'}</p>
+                        <p>{cycleroute.startLocation?.lng || 'No Lng'}</p>
+                        <p>{cycleroute.endLocation?.lat || 'No Lat'}</p>
+                        <p>{cycleroute.endLocation?.lng || 'No Lng'}</p>
                         <button onClick={() => deleteHandler(cycleroute._id)}>Delete</button>
                         {/* <button onClick={() => updateHandler(cycleroute._id)}>Edit</button> */}
-                        <button onClick={() => handleEditClick(cycleroute)}>Edit</button>
+                        <button onClick={() => EditHandler(cycleroute._id)}>Edit</button>
                         </div>
                 );
                 
