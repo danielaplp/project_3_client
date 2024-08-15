@@ -53,9 +53,7 @@ fetchData();
     <div>
       
       <h1>Cycle Routes</h1>
-            <Link to= '/cycleroutes'>
-            <button>Cycle Route</button>
-            </Link>
+           
             {cycleRoutes.map(cycleroute => {
                 return (
                     <div key={cycleroute._id}>

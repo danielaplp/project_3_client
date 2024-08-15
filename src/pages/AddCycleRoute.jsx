@@ -39,7 +39,10 @@ const handleSubmit = async (event) => {
           type, startLocation: {
             lat: startLocationLat,
             lng: startLocationLng
-          }, endLocation
+          }, endLocation: {
+            lat: endLocationLat,
+            lng: endLocationLng
+          }
       }
 
       await axios.post(`${import.meta.env.VITE_API_URL}/api/cycleroutes`, cycleRoute)

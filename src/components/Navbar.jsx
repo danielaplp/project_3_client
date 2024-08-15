@@ -39,6 +39,12 @@
           <Link to="/cycleroutes/new">
             <button>Add a Cycle Route</button>
           </Link>
+          <Link to="/parking">
+            <button>Parkings</button>
+          </Link>
+          <Link to="/parking/new">
+            <button>Add a Parking</button>
+          </Link>
           <button onClick={logout}>Logout</button>
           </>
         )}

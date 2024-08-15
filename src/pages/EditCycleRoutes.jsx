@@ -16,8 +16,9 @@ function EditCycleRoute() {
   const [startLocationLng, setStartLocationLng] = useState(0)
   const [endLocationLat, setEndLocationLat] = useState(0)
   const [endLocationLng, setEndLocationLng] = useState(0)
-
   const navigate = useNavigate();
+
+
   //
   const getSingleCycleRoute = async _id => {
     try {
@@ -28,6 +29,8 @@ function EditCycleRoute() {
       setType(response.data.type)
       setStartLocationLat(response.data.startLocation.lat)
       setStartLocationLng(response.data.startLocation.lng)
+      setEndLocationLat(response.data.endLocation.lat)
+      setEndLocationLng(response.data.endLocation.lng)
       console.log(response.data);
     } catch (error) {
       console.log("error fetching the cycleroute", error);
@@ -63,7 +66,10 @@ const handleSubmit = async (event) => {
           type, startLocation: {
             lat: startLocationLat,
             lng: startLocationLng
-          }, endLocation
+          }, endLocation: {
+            lat: endLocationLat,
+            lng: endLocationLng
+          }
       }
 
       await axios.put(`${import.meta.env.VITE_API_URL}/api/cycleroutes/${cycleRoutetId}`, cycleRoute)
