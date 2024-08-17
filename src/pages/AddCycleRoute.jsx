@@ -1,8 +1,10 @@
 import React from 'react'
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from 'axios';
 import { useNavigate} from "react-router-dom";
 import CycleAPIService from '../services/cycle.api';
+import { AuthContext } from '../contexts/auth.context';
+
 
 
 //fazer a mesma coisa com endLocation
@@ -14,6 +16,7 @@ function AddCycleRoute() {
   const [endLocationLat, setEndLocationLat] = useState(0)
   const [endLocationLng, setEndLocationLng] = useState(0)
   const navigate = useNavigate()
+  const { user } = useContext(AuthContext)
 
   const handleType = (event) => {
     setType(event.target.value)
@@ -42,7 +45,8 @@ const handleSubmit = async (event) => {
           }, endLocation: {
             lat: endLocationLat,
             lng: endLocationLng
-          }
+          },
+          userId: user._id
       }
 
       await axios.post(`${import.meta.env.VITE_API_URL}/api/cycleroutes`, cycleRoute)

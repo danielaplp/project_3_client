@@ -13,6 +13,14 @@ class CycleAPIService {
             },
         });
       }
+      getAllParkings() {
+        return axios.get(`${this.baseURL}/api/parking`,{
+            headers: {
+            Authorization: `Bearer, ${this.authToken}`,
+            },
+        });
+      }
+     
     }
 
 

@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useNavigate, useParams, Link } from "react-router-dom";
+import { AuthContext } from "../contexts/auth.context";
 
 import CycleAPIService from "../services/cycle.api";
 
@@ -11,13 +12,12 @@ function EditCycleRoute() {
   console.log(cycleRoutetId);
 
   const [cycleroute, setCycleRoute] = useState(null);
-  const [type, setType] = useState("")
-  const [startLocationLat, setStartLocationLat] = useState(0)
-  const [startLocationLng, setStartLocationLng] = useState(0)
-  const [endLocationLat, setEndLocationLat] = useState(0)
-  const [endLocationLng, setEndLocationLng] = useState(0)
+  const [type, setType] = useState("");
+  const [startLocationLat, setStartLocationLat] = useState(0);
+  const [startLocationLng, setStartLocationLng] = useState(0);
+  const [endLocationLat, setEndLocationLat] = useState(0);
+  const [endLocationLng, setEndLocationLng] = useState(0);
   const navigate = useNavigate();
-
 
   //
   const getSingleCycleRoute = async _id => {
@@ -26,11 +26,11 @@ function EditCycleRoute() {
         `${import.meta.env.VITE_API_URL}/api/cycleroutes/${_id}`,
       );
       setCycleRoute(response.data);
-      setType(response.data.type)
-      setStartLocationLat(response.data.startLocation.lat)
-      setStartLocationLng(response.data.startLocation.lng)
-      setEndLocationLat(response.data.endLocation.lat)
-      setEndLocationLng(response.data.endLocation.lng)
+      setType(response.data.type);
+      setStartLocationLat(response.data.startLocation.lat);
+      setStartLocationLng(response.data.startLocation.lng);
+      setEndLocationLat(response.data.endLocation.lat);
+      setEndLocationLng(response.data.endLocation.lng);
       console.log(response.data);
     } catch (error) {
       console.log("error fetching the cycleroute", error);
@@ -40,61 +40,62 @@ function EditCycleRoute() {
     getSingleCycleRoute(cycleRoutetId);
   }, [cycleRoutetId]);
 
+  const handleType = event => {
+    setType(event.target.value);
+  };
+  const handleStartLocationLat = event => {
+    setStartLocationLat(event.target.value);
+  };
+  const handleStartLocationLng = event => {
+    setStartLocationLng(event.target.value);
+  };
+  const handleEndLocationLat = event => {
+    setEndLocationLat(event.target.value);
+  };
+  const handleEndLocationLng = event => {
+    setEndLocationLng(event.target.value);
+  };
 
+  const handleSubmit = async event => {
+    event.preventDefault();
 
-  const handleType = (event) => {
-    setType(event.target.value)
-}
-const handleStartLocationLat = (event) => {
-  setStartLocationLat(event.target.value)
-}
-const handleStartLocationLng = (event) => {
-  setStartLocationLng(event.target.value)
-}
-const handleEndLocationLat = (event) => {
-  setEndLocationLat(event.target.value)
-}
-const handleEndLocationLng = (event) => {
-  setEndLocationLng(event.target.value)
-}
+    try {
+      const cycleRoute = {
+        type,
+        startLocation: {
+          lat: startLocationLat,
+          lng: startLocationLng,
+        },
+        endLocation: {
+          lat: endLocationLat,
+          lng: endLocationLng,
+        },
+      };
 
-const handleSubmit = async (event) => {
-  event.preventDefault()
+      await axios.put(
+        `${import.meta.env.VITE_API_URL}/api/cycleroutes/${cycleRoutetId}`,
+        cycleRoute,
+      );
 
-  try {
-      const cycleRoute ={
-          type, startLocation: {
-            lat: startLocationLat,
-            lng: startLocationLng
-          }, endLocation: {
-            lat: endLocationLat,
-            lng: endLocationLng
-          }
-      }
-
-      await axios.put(`${import.meta.env.VITE_API_URL}/api/cycleroutes/${cycleRoutetId}`, cycleRoute)
-
-
-
-      navigate("/cycleroutes")
+      navigate("/cycleroutes");
       //`http://localhost:5005/api/cycleroutes/${_id}`
       //sem localhost
-
-
     } catch (error) {
-      console.log('error creating the cycle route', error)
-  }
-}
+      console.log("error creating the cycle route", error);
+    }
+  };
 
-const deleteHandler = async (_id) => {
-  try {
-    await axios.delete(`${import.meta.env.VITE_API_URL}/api/cycleroutes/${_id}`);
-    set(cycleRoutes.filter(b => b._id !== _id));
-    console.log(`Cycle Route com ID ${_id} excluída com sucesso`);
-  } catch (error) {
-    console.log('Erro ao excluir a cycleroute:', error);
-  }
-};
+  const deleteHandler = async _id => {
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_API_URL}/api/cycleroutes/${_id}`,
+      );
+      set(cycleRoutes.filter(b => b._id !== _id));
+      console.log(`Cycle Route com ID ${_id} excluída com sucesso`);
+    } catch (error) {
+      console.log("Erro ao excluir a cycleroute:", error);
+    }
+  };
 
   /* 
   return (
@@ -131,7 +132,7 @@ const deleteHandler = async (_id) => {
           value={type}
           onChange={handleType}
         />
-
+    
         <label>Start Location</label>
         <input
           type="number"
@@ -146,12 +147,12 @@ const deleteHandler = async (_id) => {
 
         <label>End Location</label>
         <input
-        type= "number"
+          type="number"
           name="end location"
           value={endLocationLat}
           onChange={handleEndLocationLat}></input>
         <input
-        type= "number"
+          type="number"
           name="end location"
           value={endLocationLng}
           onChange={handleEndLocationLng}></input>

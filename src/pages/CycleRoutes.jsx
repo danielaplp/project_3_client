@@ -1,7 +1,8 @@
 import React from 'react'
 import { Link, useNavigate } from "react-router-dom"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from 'axios'
+import { AuthContext } from '../contexts/auth.context';
 
 import CycleAPIService from '../services/cycle.api';
 
@@ -11,6 +12,7 @@ const cycleService = new CycleAPIService();
 function CycleRoutes() {
 const [cycleRoutes, setCycleRoutes] = useState([]);
 const navigate = useNavigate();
+const {user} = useContext(AuthContext)
 
   const fetchData = async () => {
     try {
@@ -64,9 +66,14 @@ fetchData();
                         <p>{cycleroute.startLocation?.lng || 'No Lng'}</p>
                         <p>{cycleroute.endLocation?.lat || 'No Lat'}</p>
                         <p>{cycleroute.endLocation?.lng || 'No Lng'}</p>
-                        <button onClick={() => deleteHandler(cycleroute._id)}>Delete</button>
-                        {/* <button onClick={() => updateHandler(cycleroute._id)}>Edit</button> */}
-                        <button onClick={() => EditHandler(cycleroute._id)}>Edit</button>
+                        {
+                          user._id === cycleroute.creator && (<>
+                          <button onClick={() => deleteHandler(cycleroute._id)}>Delete</button>
+                  
+                          <button onClick={() => EditHandler(cycleroute._id)}>Edit</button>
+                          </>)
+                        }
+                        
                         </div>
                 );
                 
