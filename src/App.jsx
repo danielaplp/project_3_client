@@ -2,10 +2,8 @@ import { useState } from 'react'
 import Homepage from './pages/Homepage';
 import Parkings from './pages/Parkings';
 import CycleRoutes from './pages/CycleRoutes';
-import Zones30 from './pages/Zones30';
 import AddCycleRoute from './pages/AddCycleRoute';
 import EditCycleRoute from './pages/EditCycleRoutes';
-import AddZone30 from './pages/AddZone30';
 import AddParking from './pages/AddParking';
 import SignUp from './pages/Auth/SignUp';
 import Login from './pages/Auth/Login';
@@ -24,8 +22,7 @@ function App() {
         <Route path='/cycleroutes' element={<CycleRoutes/>}/>
         <Route path='/cycleroutes/new' element={<AddCycleRoute/>}/>
         <Route path='/cycleroutes/edit/:cycleRoutetId' element={<EditCycleRoute/>}/>
-        <Route path='/zone30' element={<Zones30/>}/>
-        <Route path='/zone30/new' element={<AddZone30/>}/>
+        
         <Route path='/parking' element={<Parkings/>}/>
         <Route path='/parking/new' element={<AddParking/>}/>
         <Route path='/signup' element={

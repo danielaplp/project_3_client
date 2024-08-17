@@ -1,7 +1,8 @@
 import React from 'react'
 import { Link, useNavigate } from "react-router-dom"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from 'axios'
+import { AuthContext } from '../contexts/auth.context';
 
 import CycleAPIService from '../services/cycle.api';
 
@@ -11,6 +12,7 @@ const cycleService = new CycleAPIService();
 function Parkings() {
 const [parkings, setParkings] = useState([]);
 const navigate = useNavigate();
+const {user} = useContext(AuthContext)
 
 const fetchData = async () => {
   try {
@@ -67,9 +69,13 @@ fetchData();
                         <p>{parking.endLocation?.lng || 'No Lng'}</p>
                         <p>{parking.quantity || 'No quantity'}</p>
                         <p>{parking.parkingPic || 'No Pic'}</p>
+                        {
+                          user._id === parking.creator && (<>
                         <button onClick={() => deleteHandler(parking._id)}>Delete</button>
-                        {/* <button onClick={() => updateHandler(cycleroute._id)}>Edit</button> */}
+            
                         <button onClick={() => EditHandler(parking._id)}>Edit</button>
+                        </>)
+            }
                         </div>
                 );
                 

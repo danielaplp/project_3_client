@@ -7,39 +7,43 @@ import CycleAPIService from "../services/cycle.api";
 
 const cycleService = new CycleAPIService();
 
-function EditCycleRoute() {
-  const { cycleRoutetId } = useParams();
-  console.log(cycleRoutetId);
+function EditParking() {
+  const { parkingId } = useParams();
+  console.log(parkingId);
 
-  const [cycleroute, setCycleRoute] = useState(null);
+  const [parking, setParking] = useState(null);
   const [type, setType] = useState("");
   const [startLocationLat, setStartLocationLat] = useState(0);
   const [startLocationLng, setStartLocationLng] = useState(0);
   const [endLocationLat, setEndLocationLat] = useState(0);
   const [endLocationLng, setEndLocationLng] = useState(0);
+  const [quantity, setQuantity] = useState(0)
+  const [parkingPic, setParkingPic] = useState("")
   const navigate = useNavigate();
   const { user } = useContext(AuthContext)
 
   //
-  const getSingleCycleRoute = async _id => {
+  const getSingleParking = async _id => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/cycleroutes/${_id}`,
+        `${import.meta.env.VITE_API_URL}/api/parking/${_id}`,
       );
-      setCycleRoute(response.data);
+      setParking(response.data);
       setType(response.data.type);
       setStartLocationLat(response.data.startLocation.lat);
       setStartLocationLng(response.data.startLocation.lng);
       setEndLocationLat(response.data.endLocation.lat);
       setEndLocationLng(response.data.endLocation.lng);
+      setQuantity(response.data.quantity);
+      setParkingPic(response.data.parkingPic);
       console.log(response.data);
     } catch (error) {
-      console.log("error fetching the cycleroute", error);
+      console.log("error fetching the parking", error);
     }
   };
   useEffect(() => {
-    getSingleCycleRoute(cycleRoutetId);
-  }, [cycleRoutetId]);
+    getSingleParking(parkingId);
+  }, [parkingId]);
 
   const handleType = event => {
     setType(event.target.value);
@@ -57,11 +61,18 @@ function EditCycleRoute() {
     setEndLocationLng(event.target.value);
   };
 
+  const handleQuantity = (event) => {
+    setQuantity(event.target.value)
+  }
+  const handleParkingPic = (event) => {
+    setParkingPic(event.target.value)
+  }
+
   const handleSubmit = async event => {
     event.preventDefault();
 
     try {
-      const cycleRoute = {
+      const parking = {
         type,
         startLocation: {
           lat: startLocationLat,
@@ -71,38 +82,40 @@ function EditCycleRoute() {
           lat: endLocationLat,
           lng: endLocationLng,
         },
+        quantity,
+        parkingPic,
         userId: user._id
       };
 
       await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/cycleroutes/${cycleRoutetId}`,
-        cycleRoute,
+        `${import.meta.env.VITE_API_URL}/api/parking/${parkingId}`,
+        parking,
       );
 
-      navigate("/cycleroutes");
+      navigate("/parking");
       //`http://localhost:5005/api/cycleroutes/${_id}`
       //sem localhost
     } catch (error) {
-      console.log("error creating the cycle route", error);
+      console.log("error creating the parking", error);
     }
   };
 
   const deleteHandler = async _id => {
     try {
       await axios.delete(
-        `${import.meta.env.VITE_API_URL}/api/cycleroutes/${_id}`,
+        `${import.meta.env.VITE_API_URL}/api/parking/${_id}`,
       );
-      set(cycleRoutes.filter(b => b._id !== _id));
-      console.log(`Cycle Route com ID ${_id} excluída com sucesso`);
+      set(parking.filter(b => b._id !== _id));
+      console.log(`Parking com ID ${_id} excluída com sucesso`);
     } catch (error) {
-      console.log("Erro ao excluir a cycleroute:", error);
+      console.log("Erro ao excluir a parking:", error);
     }
   };
 
 
   return (
     <div>
-      <h2>edit Cycle Route</h2>
+      <h2>edit Parking</h2>
       <form onSubmit={handleSubmit}>
         <label>Type</label>
         <input
@@ -136,10 +149,16 @@ function EditCycleRoute() {
           value={endLocationLng}
           onChange={handleEndLocationLng}></input>
 
+       <label>Quantity</label>
+      <input type="number" name="quantity" value={quantity} onChange={handleQuantity}></input>
+
+      <label>Picture</label>
+      <input type="text" name="picture" value={parkingPic} onChange={handleParkingPic}></input>
+
         <button type="submit">Edit Cycle Route</button>
       </form>
     </div>
   );
 }
 
-export default EditCycleRoute;
+export default EditParking;

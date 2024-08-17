@@ -1,8 +1,9 @@
 import React from 'react'
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from 'axios';
 import { useNavigate} from "react-router-dom";
 import CycleAPIService from '../services/cycle.api';
+import { AuthContext } from '../contexts/auth.context';
 
 
 //fazer a mesma coisa com endLocation
@@ -16,6 +17,7 @@ function AddParking() {
   const [quantity, setQuantity] = useState(0)
   const [parkingPic, setParkingPic] = useState("")
   const navigate = useNavigate()
+  const { user } = useContext(AuthContext)
 
   const handleType = (event) => {
     setType(event.target.value)
@@ -53,7 +55,8 @@ const handleSubmit = async (event) => {
             lng: endLocationLng
           },
           quantity,
-          parkingPic
+          parkingPic,
+          userId: user._id
       }
 
       await axios.post(`${import.meta.env.VITE_API_URL}/api/parking`, parking)
@@ -96,7 +99,7 @@ return (
       
       <label>End Location</label>
       <input type="number" name="end location" value={endLocationLat} onChange={handleEndLocationLat}></input>
-      <input type="number" name="end location" value={endLocationLng} onChange={handleEndLocationLng}></input>~
+      <input type="number" name="end location" value={endLocationLng} onChange={handleEndLocationLng}></input>
 
       <label>Quantity</label>
       <input type="number" name="quantity" value={quantity} onChange={handleQuantity}></input>
