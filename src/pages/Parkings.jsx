@@ -24,7 +24,7 @@ const fetchData = async () => {
   }
 };
 
-
+/* 
 const deleteHandler = async (_id) => {
   try {
     await axios.delete(`${import.meta.env.VITE_API_URL}/api/parking/${_id}`);
@@ -37,15 +37,9 @@ const deleteHandler = async (_id) => {
 
 const EditHandler = async (_id) => {
   navigate(`/parking/edit/${_id}`);
-  /* try {
-    await axios.put(`${import.meta.env.VITE_API_URL}/api/cycleroutes/${_id}`);
-    setCycleRoutes(cycleroutes.filter(b => b._id !== _id));
-    console.log(`Cycle Route with ID ${_id} updated`);
-  } catch (error) {
-    console.log('Error of editing cycleroute:', error);
-  } */
+  
 };
-
+ */
 
 useEffect(() => {
 console.log('useEffect: Mounting')
@@ -60,7 +54,7 @@ fetchData();
             {parkings.map(parking => {
                 return (
                     <div key={parking._id}>
-                        <Link to={`/parkings/${parking._id}`}>
+                        <Link to={`/parking/${parking._id}`}>
                         <h2>{parking.type}</h2>
                         </Link>
                         <p>{parking.startLocation?.lat || 'No Lat'}</p>
@@ -68,12 +62,10 @@ fetchData();
                         <p>{parking.endLocation?.lat || 'No Lat'}</p>
                         <p>{parking.endLocation?.lng || 'No Lng'}</p>
                         <p>{parking.quantity || 'No quantity'}</p>
-                        <p>{parking.parkingPic || 'No Pic'}</p>
+                       <img src={parking.parkingPic} alt="" />
                         {
                           user._id === parking.creator && (<>
-                        <button onClick={() => deleteHandler(parking._id)}>Delete</button>
-            
-                        <button onClick={() => EditHandler(parking._id)}>Edit</button>
+                        
                         </>)
             }
                         </div>

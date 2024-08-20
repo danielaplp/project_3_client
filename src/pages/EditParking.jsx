@@ -19,6 +19,8 @@ function EditParking() {
   const [endLocationLng, setEndLocationLng] = useState(0);
   const [quantity, setQuantity] = useState(0)
   const [parkingPic, setParkingPic] = useState("")
+  const [currentImage, setCurrentImage] = useState("")
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate();
   const { user } = useContext(AuthContext)
 
@@ -35,7 +37,8 @@ function EditParking() {
       setEndLocationLat(response.data.endLocation.lat);
       setEndLocationLng(response.data.endLocation.lng);
       setQuantity(response.data.quantity);
-      setParkingPic(response.data.parkingPic);
+      setCurrentImage(response.data.parkingPic)
+    
       console.log(response.data);
     } catch (error) {
       console.log("error fetching the parking", error);
@@ -66,6 +69,26 @@ function EditParking() {
   }
   const handleParkingPic = (event) => {
     setParkingPic(event.target.value)
+  }
+
+  const handleFileUpload = async (event) => {
+    //confoiguring how to send the file
+    const uploadData = new FormData()
+  
+    uploadData.append("imgUrl", event.target.files[0]);
+  
+    try {
+        setLoading(true)
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/upload`, uploadData);
+        setLoading(false);
+        setParkingPic(response.data.fileUrl);
+        setCurrentImage(response.data.fileUrl)
+        console.log(response.data.fileUrl);
+  
+    } catch (error) {
+        setLoading(false);
+        console.error(error)
+    }
   }
 
   const handleSubmit = async event => {
@@ -106,7 +129,7 @@ function EditParking() {
         `${import.meta.env.VITE_API_URL}/api/parking/${_id}`,
       );
       set(parking.filter(b => b._id !== _id));
-      console.log(`Parking com ID ${_id} excluída com sucesso`);
+      console.log(`Parking com ID ${_id} excluída `);
     } catch (error) {
       console.log("Erro ao excluir a parking:", error);
     }
@@ -153,9 +176,9 @@ function EditParking() {
       <input type="number" name="quantity" value={quantity} onChange={handleQuantity}></input>
 
       <label>Picture</label>
-      <input type="text" name="picture" value={parkingPic} onChange={handleParkingPic}></input>
-
-        <button type="submit">Edit Cycle Route</button>
+      <input type="file" name="imgUrl"  onChange={handleFileUpload}></input>
+<img src={currentImage} alt="" />
+        <button type="submit">Edit Parking</button>
       </form>
     </div>
   );

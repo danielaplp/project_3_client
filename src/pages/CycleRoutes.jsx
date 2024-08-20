@@ -3,16 +3,30 @@ import { Link, useNavigate } from "react-router-dom"
 import { useState, useEffect, useContext } from "react";
 import axios from 'axios'
 import { AuthContext } from '../contexts/auth.context';
+import { GoogleMap, LoadScript, Marker, Polyline } from '@react-google-maps/api';
 
 import CycleAPIService from '../services/cycle.api';
 
 
 const cycleService = new CycleAPIService();
 
+const containerStyle = {
+  width: '100%',
+  height: '400px'
+};
+
+const center = {
+  lat: -3.745,
+  lng: -38.523
+};
+
 function CycleRoutes() {
 const [cycleRoutes, setCycleRoutes] = useState([]);
 const navigate = useNavigate();
 const {user} = useContext(AuthContext)
+
+
+
 
   const fetchData = async () => {
     try {
@@ -24,26 +38,7 @@ const {user} = useContext(AuthContext)
     }
 
 };
-const deleteHandler = async (_id) => {
-  try {
-    await axios.delete(`${import.meta.env.VITE_API_URL}/api/cycleroutes/${_id}`);
-    setCycleRoutes(cycleRoutes.filter(b => b._id !== _id));
-    console.log(`Cycle Route with ID ${_id} deleted`);
-  } catch (error) {
-    console.log('Error of deleting cycleroute:', error);
-  }
-};
 
-const EditHandler = async (_id) => {
-  navigate(`/cycleroutes/edit/${_id}`);
-  /* try {
-    await axios.put(`${import.meta.env.VITE_API_URL}/api/cycleroutes/${_id}`);
-    setCycleRoutes(cycleroutes.filter(b => b._id !== _id));
-    console.log(`Cycle Route with ID ${_id} updated`);
-  } catch (error) {
-    console.log('Error of editing cycleroute:', error);
-  } */
-};
 
 
 useEffect(() => {
@@ -66,13 +61,22 @@ fetchData();
                         <p>{cycleroute.startLocation?.lng || 'No Lng'}</p>
                         <p>{cycleroute.endLocation?.lat || 'No Lat'}</p>
                         <p>{cycleroute.endLocation?.lng || 'No Lng'}</p>
-                        {
-                          user._id === cycleroute.creator && (<>
-                          <button onClick={() => deleteHandler(cycleroute._id)}>Delete</button>
-                  
-                          <button onClick={() => EditHandler(cycleroute._id)}>Edit</button>
-                          </>)
-                        }
+                        
+      <LoadScript
+      googleMapsApiKey="AIzaSyAmQDQ_YE5BHV1EFMu717cncucLvLL93ic"
+    >
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+       
+        zoom={12}>
+
+       {/*  <Marker position={cycleroute.startLocation?.lat} label="Início" />
+                <Marker position={cycleroute.endLocation?.lat && cycleroute.endLocation?.lng } label="Fim" />
+                <Polyline  options={{ strokeColor: "#FF0000", strokeWeight: 2 }} /> */}
+       
+        <></>
+      </GoogleMap>
+    </LoadScript>
                         
                         </div>
                 );
