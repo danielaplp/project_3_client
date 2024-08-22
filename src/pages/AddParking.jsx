@@ -16,6 +16,7 @@ function AddParking() {
   const [endLocationLng, setEndLocationLng] = useState(0)
   const [quantity, setQuantity] = useState(0)
   const [parkingPic, setParkingPic] = useState("")
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const { user } = useContext(AuthContext)
 
@@ -37,8 +38,24 @@ const handleEndLocationLng = (event) => {
 const handleQuantity = (event) => {
   setQuantity(event.target.value)
 }
-const handleParkingPic = (event) => {
-  setParkingPic(event.target.value)
+
+const handleFileUpload = async (event) => {
+  //confoiguring how to send the file
+  const uploadData = new FormData()
+
+  uploadData.append("imgUrl", event.target.files[0]);
+
+  try {
+      setLoading(true)
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/upload`, uploadData);
+      setLoading(false);
+      setParkingPic(response.data.fileUrl);
+      console.log(response.data.fileUrl);
+
+  } catch (error) {
+      setLoading(false);
+      console.error(error)
+  }
 }
 
 const handleSubmit = async (event) => {
@@ -105,10 +122,10 @@ return (
       <input type="number" name="quantity" value={quantity} onChange={handleQuantity}></input>
 
       <label>Picture</label>
-      <input type="text" name="picture" value={parkingPic} onChange={handleParkingPic}></input>
+      <input type="file" name="imgUrl" onChange={handleFileUpload}></input>
       
       
-      <button type="submit">Add Parking</button>
+      <button type="submit" disabled= {loading}>Add Parking</button>
     </form>
   </div>
 );

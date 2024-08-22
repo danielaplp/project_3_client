@@ -8,8 +8,8 @@ import CycleAPIService from "../services/cycle.api";
 const cycleService = new CycleAPIService();
 
 function EditCycleRoute() {
-  const { cycleRoutetId } = useParams();
-  console.log(cycleRoutetId);
+  const { cycleRouteId } = useParams();
+  console.log(cycleRouteId);
 
   const [cycleroute, setCycleRoute] = useState(null);
   const [type, setType] = useState("");
@@ -38,8 +38,8 @@ function EditCycleRoute() {
     }
   };
   useEffect(() => {
-    getSingleCycleRoute(cycleRoutetId);
-  }, [cycleRoutetId]);
+    getSingleCycleRoute(cycleRouteId);
+  }, [cycleRouteId]);
 
   const handleType = event => {
     setType(event.target.value);
@@ -75,7 +75,7 @@ function EditCycleRoute() {
       };
 
       await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/cycleroutes/${cycleRoutetId}`,
+        `${import.meta.env.VITE_API_URL}/api/cycleroutes/${cycleRouteId}`,
         cycleRoute,
       );
 
@@ -93,7 +93,7 @@ function EditCycleRoute() {
         `${import.meta.env.VITE_API_URL}/api/cycleroutes/${_id}`,
       );
       set(cycleRoutes.filter(b => b._id !== _id));
-      console.log(`Cycle Route com ID ${_id} excluída com sucesso`);
+      console.log(`Cycle Route com ID ${_id} excluída`);
     } catch (error) {
       console.log("Erro ao excluir a cycleroute:", error);
     }

@@ -26,9 +26,7 @@
           <Link to="/cycleroutes/new">
             <button>Add a Cycle Route</button>
           </Link>
-          <Link to="/cycleroutes/new">
-            <button>Add a Cycle Route</button>
-          </Link>
+        
           <Link to="/parking">
             <button>Parkings</button>
           </Link>
