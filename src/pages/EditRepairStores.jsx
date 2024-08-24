@@ -28,9 +28,7 @@ function EditRepairStore() {
   const [name, setName] = useState("");
   const [location, setLocation] = useState(null);
 
-  const [quantity, setQuantity] = useState(0);
-  const [parkingPic, setParkingPic] = useState("");
-  const [currentImage, setCurrentImage] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [map, setMap] = useState(null);
   const [zoom, setZoom] = useState(10);
