@@ -20,17 +20,15 @@ const containerStyle = {
   height: "400px",
 };
 
-function EditCycleRoute() {
-  const { cycleRouteId } = useParams();
-  console.log(cycleRouteId);
+function EditRepairStore() {
+  const { repairStoreId } = useParams();
+  console.log(repairStoreId);
 
   const [cycleroute, setCycleRoute] = useState(null);
-  const [type, setType] = useState("");
-  const [startLocation, setStartLocation] = useState(null);
-  const [endLocation, setEndLocation] = useState(null);
-  const [newStartLocation, setNewStartLocation] = useState(null);
-  const [newEndLocation, setNewEndLocation] = useState(null);
-
+  const [name, setName] = useState("");
+  
+  const [location, setLocation] = useState(null);
+  
 
   const [dragging, setDragging]= useState(null);
 
@@ -41,12 +39,12 @@ function EditCycleRoute() {
   const { user } = useContext(AuthContext);
 
   //
-  const getSingleCycleRoute = async _id => {
+  const getSingleRepairStore = async _id => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/cycleroutes/${_id}`,
+        `${import.meta.env.VITE_API_URL}/api/repairstore/${_id}`,
       );
-      setCycleRoute(response.data);
+      setRepairStore(response.data);
       setType(response.data.type);
       setStartLocation(response.data.startLocation);
    
@@ -68,15 +66,32 @@ function EditCycleRoute() {
   const handleType = event => {
     setType(event.target.value);
   };
+  const handleStartLocationLat = event => {
+    setStartLocationLat(event.target.value);
+  };
+  const handleStartLocationLng = event => {
+    setStartLocationLng(event.target.value);
+  };
+  const handleEndLocationLat = event => {
+    setEndLocationLat(event.target.value);
+  };
+  const handleEndLocationLng = event => {
+    setEndLocationLng(event.target.value);
+  };
 
   const handleMapClick = event => {
     const { latLng } = event;
     const lat = latLng.lat();
     const lng = latLng.lng();
 
+    if (!startLocation) {
+      setStartLocation({ lat, lng });
+    } else if (!endLocation) {
+      setEndLocation({ lat, lng });
+    } else {
       setStartLocation({ lat, lng });
       setEndLocation(null);
-    
+    }
   };
 
   const handleMarkerDragStart = (marker) => {
@@ -87,10 +102,8 @@ function EditCycleRoute() {
 
     if (dragging === "start") {
       setStartLocation(newLocation);
-      setNewStartLocation(newLocation);
     } else if (dragging === "end") {
       setEndLocation(newLocation);
-      setNewEndLocation(newLocation);
     }
 
     setDragging(null); 
@@ -246,12 +259,6 @@ function EditCycleRoute() {
           {startLocation && endLocation && (
             <Polyline
               path={[startLocation, endLocation]}
-              options={{ strokeColor: "red", strokeWeight: 5 }}
-            />
-          )}
-          {newStartLocation && newEndLocation && (
-            <Polyline
-              path={[newStartLocation, newEndLocation]}
               options={{ strokeColor: "green", strokeWeight: 5 }}
             />
           )}

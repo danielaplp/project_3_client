@@ -33,6 +33,12 @@
           <Link to="/parking/new">
             <button>Add a Parking</button>
           </Link>
+          <Link to="/repairstore">
+            <button>Repair Stores</button>
+          </Link>
+          <Link to="/repairstore/new">
+            <button>Add a Repair Store</button>
+          </Link>
           <button onClick={logout}>Logout</button>
           </>
         )}

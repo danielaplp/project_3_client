@@ -20,8 +20,8 @@ const containerStyle = {
   height: "400px",
 };
 
-function CycleRoutes() {
-  const [cycleRoutes, setCycleRoutes] = useState([]);
+function RepairStores() {
+  const [repairStores, setRepairStores] = useState([]);
   const [map, setMap] = useState(null);
   const [zoom, setZoom] = useState(10);
 
@@ -47,8 +47,8 @@ function CycleRoutes() {
 
   const fetchData = async () => {
     try {
-      const response = await cycleService.getAllCycleRoutes();
-      setCycleRoutes(response.data);
+      const response = await cycleService.getAllRepairStores();
+      setRepairStores(response.data);
       console.log(response.data);
     } catch (error) {
       console.error(error);
@@ -65,13 +65,13 @@ function CycleRoutes() {
 
   return (
     <div>
-      <h1>Cycle Routes</h1>
+      <h1>Repair Stores</h1>
 
-      {cycleRoutes.map(cycleroute => {
+      {repairStores.map(repairstore => {
         return (
-          <div key={cycleroute._id}>
-            <Link to={`/cycleroutes/${cycleroute._id}`}>
-              <h2>{cycleroute.type}</h2>
+          <div key={repairstore._id}>
+            <Link to={`/repairstore/${repairstore._id}`}>
+              <h2>{repairstore.name}</h2>
             </Link>
             {/* <p>{cycleroute.startLocation?.lat || "No Lat"}</p>
             <p>{cycleroute.startLocation?.lng || "No Lng"}</p>
@@ -83,19 +83,13 @@ function CycleRoutes() {
                 mapContainerStyle={containerStyle}
                 zoom={zoom}
                 onLoad={onLoad}
-                center={cycleroute.startLocation}>
+                center={repairstore.location}>
                 <Marker
-                  position={cycleroute.startLocation}
-                  label="Start"
+                  position={repairstore.location}
+                  label="R"
                 />
-                <Marker
-                  position={cycleroute.endLocation}
-                  label="End"
-                />
-                <Polyline
-                path={[cycleroute.startLocation, cycleroute.endLocation]}
-                  options={{ strokeColor: "green", strokeWeight: 5 }}
-                />
+                
+              
               </GoogleMap>
             )}
           </div>
@@ -105,4 +99,4 @@ function CycleRoutes() {
   );
 }
 
-export default CycleRoutes;
+export default RepairStores;

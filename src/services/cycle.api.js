@@ -20,6 +20,13 @@ class CycleAPIService {
             },
         });
       }
+      getAllRepairStores() {
+        return axios.get(`${this.baseURL}/api/repairstore`,{
+            headers: {
+            Authorization: `Bearer, ${this.authToken}`,
+            },
+        });
+      }
      
     }
 

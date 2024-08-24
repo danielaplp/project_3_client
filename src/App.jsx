@@ -8,12 +8,15 @@ import EditParking from './pages/EditParking';
 import CycleRoutesDetail from './pages/CycleRoutesDetail';
 import ParkingDetail from './pages/ParkingDetail'
 import AddParking from './pages/AddParking';
+import RepairStores from './pages/RepairStores'
+import AddRepairStore from './pages/AddRepairStores'
 import SignUp from './pages/Auth/SignUp';
 import Login from './pages/Auth/Login';
 import Anon from './components/Anon';
 import Navbar from './components/Navbar';
 import './App.css'
 import { Routes, Route } from "react-router-dom"
+
 
 function App() {
 
@@ -30,6 +33,8 @@ function App() {
         <Route path='/parking/new' element={<AddParking/>}/>
         <Route path='/parking/:parkingId' element={<ParkingDetail/>}/>
         <Route path='/parking/edit/:parkingId' element={<EditParking/>}/>
+        <Route path='/repairstore' element={<RepairStores/>}/>
+        <Route path='/repairstore/new' element={<AddRepairStore/>}/>
         <Route path='/signup' element={
           <Anon>
           <SignUp/>
