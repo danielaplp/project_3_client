@@ -24,14 +24,14 @@ function EditRepairStore() {
   const { repairStoreId } = useParams();
   console.log(repairStoreId);
 
-  const [cycleroute, setCycleRoute] = useState(null);
+  const [repairStore, setRepairStore] = useState(null);
   const [name, setName] = useState("");
-  
   const [location, setLocation] = useState(null);
-  
 
-  const [dragging, setDragging]= useState(null);
-
+  const [quantity, setQuantity] = useState(0);
+  const [parkingPic, setParkingPic] = useState("");
+  const [currentImage, setCurrentImage] = useState("");
+  const [loading, setLoading] = useState(false);
   const [map, setMap] = useState(null);
   const [zoom, setZoom] = useState(10);
 
@@ -39,44 +39,31 @@ function EditRepairStore() {
   const { user } = useContext(AuthContext);
 
   //
-  const getSingleRepairStore = async _id => {
+  const getSingleParking = async _id => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/repairstore/${_id}`,
+        `${import.meta.env.VITE_API_URL}/api/parking/${_id}`,
       );
-      setRepairStore(response.data);
+      setParking(response.data);
       setType(response.data.type);
-      setStartLocation(response.data.startLocation);
-   
-      setEndLocation(response.data.endLocation);
-     
+      setLocation(response.data.location);
+      setQuantity(response.data.quantity);
+      setCurrentImage(response.data.parkingPic);
+
       console.log(response.data);
     } catch (error) {
-      console.log("error fetching the cycleroute", error);
+      console.log("error fetching the parking", error);
     }
   };
-
   useEffect(() => {
-    getSingleCycleRoute(cycleRouteId);
+    getSingleParking(parkingId);
     setTimeout(() => {
       setZoom(14);
     }, 500);
-  }, [cycleRouteId]);
+  }, [parkingId]);
 
   const handleType = event => {
     setType(event.target.value);
-  };
-  const handleStartLocationLat = event => {
-    setStartLocationLat(event.target.value);
-  };
-  const handleStartLocationLng = event => {
-    setStartLocationLng(event.target.value);
-  };
-  const handleEndLocationLat = event => {
-    setEndLocationLat(event.target.value);
-  };
-  const handleEndLocationLng = event => {
-    setEndLocationLng(event.target.value);
   };
 
   const handleMapClick = event => {
@@ -84,95 +71,71 @@ function EditRepairStore() {
     const lat = latLng.lat();
     const lng = latLng.lng();
 
-    if (!startLocation) {
-      setStartLocation({ lat, lng });
-    } else if (!endLocation) {
-      setEndLocation({ lat, lng });
-    } else {
-      setStartLocation({ lat, lng });
-      setEndLocation(null);
-    }
+    console.log({ lat, lng });
+    setLocation({ lat, lng });
   };
 
-  const handleMarkerDragStart = (marker) => {
-    setDragging(marker); 
+  const handleQuantity = event => {
+    setQuantity(event.target.value);
   };
-  const handleMarkerDragEnd = (event) => {
-    const newLocation = { lat: event.latLng.lat(), lng: event.latLng.lng() };
+  const handleParkingPic = event => {
+    setParkingPic(event.target.value);
+  };
 
-    if (dragging === "start") {
-      setStartLocation(newLocation);
-    } else if (dragging === "end") {
-      setEndLocation(newLocation);
+  const handleFileUpload = async event => {
+    //confoiguring how to send the file
+    const uploadData = new FormData();
+
+    uploadData.append("imgUrl", event.target.files[0]);
+
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/upload`,
+        uploadData,
+      );
+      setLoading(false);
+      setParkingPic(response.data.fileUrl);
+      setCurrentImage(response.data.fileUrl);
+      console.log(response.data.fileUrl);
+    } catch (error) {
+      setLoading(false);
+      console.error(error);
     }
-
-    setDragging(null); 
   };
 
   const handleSubmit = async event => {
     event.preventDefault();
-    
-    if (
-      !startLocation ||
-      !startLocation.lat ||
-      !startLocation.lng ||
-      !endLocation ||
-      !endLocation.lat ||
-      !endLocation.lng
-    ) {
-      //
-      alert("Please select both start and end locations.");
-      return;
-    }
 
     try {
-      const cycleRoute = {
+      const parking = {
         type,
-        startLocation: {
-          lat: startLocation.lat,
-          lng: startLocation.lng,
-        },
-        endLocation: {
-          lat: endLocation.lat,
-          lng: endLocation.lng,
-        },
+        location,
+        quantity,
+        parkingPic,
         userId: user._id,
       };
-      /* const cycleRoute = {
-        type,
-        startLocation: {
-          lat: startLocationLat,
-          lng: startLocationLng,
-        },
-        endLocation: {
-          lat: endLocationLat,
-          lng: endLocationLng,
-        },
-        userId: user._id,
-      }; */
 
       await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/cycleroutes/${cycleRouteId}`,
-        cycleRoute,
+        `${import.meta.env.VITE_API_URL}/api/parking/${parkingId}`,
+        parking,
       );
 
-      navigate("/cycleroutes");
+      navigate("/parking");
       //`http://localhost:5005/api/cycleroutes/${_id}`
       //sem localhost
     } catch (error) {
-      console.log("error creating the cycle route", error);
+      console.log("error creating the parking", error);
     }
   };
 
   const deleteHandler = async _id => {
     try {
-      await axios.delete(
-        `${import.meta.env.VITE_API_URL}/api/cycleroutes/${_id}`,
-      );
-      set(cycleRoutes.filter(b => b._id !== _id));
-      console.log(`Cycle Route com ID ${_id} excluída`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/parking/${_id}`);
+      set(parking.filter(b => b._id !== _id));
+      console.log(`Parking com ID ${_id} excluída `);
     } catch (error) {
-      console.log("Erro ao excluir a cycleroute:", error);
+      console.log("Erro ao excluir a parking:", error);
     }
   };
 
@@ -195,7 +158,7 @@ function EditRepairStore() {
 
   return (
     <div>
-      <h2>edit Cycle Route</h2>
+      <h2>edit Parking</h2>
       <form onSubmit={handleSubmit}>
         <label>Type</label>
         <input
@@ -205,68 +168,40 @@ function EditRepairStore() {
           onChange={handleType}
         />
 
-        {/* <label>Start Location</label>
+        <label>Quantity</label>
         <input
           type="number"
-          name="start location"
-          value={startLocationLat}
-          onChange={handleStartLocationLat}></input>
-        <input
-          type="number"
-          name="start location"
-          value={startLocationLng}
-          onChange={handleStartLocationLng}></input>
+          name="quantity"
+          value={quantity}
+          onChange={handleQuantity}></input>
 
-        <label>End Location</label>
+        <label>Picture</label>
         <input
-          type="number"
-          name="end location"
-          value={endLocationLat}
-          onChange={handleEndLocationLat}></input>
-        <input
-          type="number"
-          name="end location"
-          value={endLocationLng}
-          onChange={handleEndLocationLng}></input> */}
-
-        <button type="submit">Edit Cycle Route</button>
+          type="file"
+          name="imgUrl"
+          onChange={handleFileUpload}></input>
+        <img
+          src={currentImage}
+          alt=""
+        />
+        <button type="submit">Edit Parking</button>
       </form>
       {isLoaded && (
         <GoogleMap
           mapContainerStyle={containerStyle}
           zoom={zoom}
           onLoad={onLoad}
-          onClick={handleMapClick}
-          center={center}>
-          {startLocation && (
-            <Marker
-              position={cycleroute.startLocation}
-              label="Start"
-              draggable={true}
-              onDragStart={() => handleMarkerDragStart("start")}
-              onDragEnd={event => handleMarkerDragEnd(event, setStartLocation)}
-            />
-          )}
-          {endLocation && (
+          onClick={handleMapClick}>
           <Marker
-            position={cycleroute.endLocation}
-            label="End"
-            draggable={true}
-            onDragStart={() => handleMarkerDragStart("end")}
-              onDragEnd={event => handleMarkerDragEnd(event, setEndLocation)}
+            position={location}
+            label="P"
           />
-        )}
-          {startLocation && endLocation && (
-            <Polyline
-              path={[startLocation, endLocation]}
-              options={{ strokeColor: "green", strokeWeight: 5 }}
-            />
-          )}
-          
+
+          <Polyline options={{ strokeColor: "#FF0000", strokeWeight: 2 }} />
         </GoogleMap>
       )}
     </div>
   );
 }
 
-export default EditCycleRoute;
+export default EditParking;

@@ -10,6 +10,7 @@ import ParkingDetail from './pages/ParkingDetail'
 import AddParking from './pages/AddParking';
 import RepairStores from './pages/RepairStores'
 import AddRepairStore from './pages/AddRepairStores'
+import RepairStoreDetail from './pages/RepairStoresDetail'
 import SignUp from './pages/Auth/SignUp';
 import Login from './pages/Auth/Login';
 import Anon from './components/Anon';
@@ -35,6 +36,7 @@ function App() {
         <Route path='/parking/edit/:parkingId' element={<EditParking/>}/>
         <Route path='/repairstore' element={<RepairStores/>}/>
         <Route path='/repairstore/new' element={<AddRepairStore/>}/>
+        <Route path='/repairstore/:repairstoreId' element={<RepairStoreDetail/>}/>
         <Route path='/signup' element={
           <Anon>
           <SignUp/>
