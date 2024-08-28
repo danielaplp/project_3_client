@@ -16,7 +16,7 @@ const cycleService = new CycleAPIService();
 
 const containerStyle = {
   width: "100%",
-  height: "400px",
+  height: "calc(100vh - 80px)",
 };
 
 const RepairStoreDetail = () => {
@@ -25,7 +25,7 @@ const RepairStoreDetail = () => {
   const [zoom, setZoom] = useState(10);
 
   const { repairstoreId } = useParams();
-  const {user} = useContext(AuthContext)
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   console.log(repairstoreId);
@@ -35,36 +35,37 @@ const RepairStoreDetail = () => {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/api/repairstore/${_id}`,
       );
-      setRepairStore(response.data); 
+      setRepairStore(response.data);
     } catch (error) {
       console.log("error fetching the repair store", error);
     }
   };
-  const deleteHandler = async (_id) => {
+  const deleteHandler = async _id => {
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/api/repairstore/${_id}`);
+      await axios.delete(
+        `${import.meta.env.VITE_API_URL}/api/repairstore/${_id}`,
+      );
       console.log(`Repair Store with ID ${_id} deleted`);
     } catch (error) {
-      console.log('Error of deleting repair store', error);
+      console.log("Error of deleting repair store", error);
     }
-    navigate('/repairstore');
+    navigate("/repairstore");
   };
-  
-  const EditHandler = async (_id) => {
+
+  const EditHandler = async _id => {
     navigate(`/repairstore/edit/${_id}`);
-  
   };
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: `${import.meta.env.VITE_GMAPS_API_KEY}`,
   });
-  
+
   const center = {
     lat: 38.722357386512876,
     lng: -9.146005938990468,
   };
-  
+
   const onLoad = React.useCallback(function callback(map) {
     // This is just an example of getting and using the map instance!!! don't just blindly copy!
     const bounds = new window.google.maps.LatLngBounds(center);
@@ -74,16 +75,16 @@ const RepairStoreDetail = () => {
 
   useEffect(() => {
     getSingleRepairStore(repairstoreId);
-    setTimeout(()=> {
+    setTimeout(() => {
       setZoom(14);
-    }, 500)
+    }, 500);
   }, [repairstoreId]);
-
-  
 
   return (
     <div>
-      <h1>Repair Store Details</h1>
+     <div className="bg-green-600 text-white py-4 px-6">
+        <h1 className="text-3xl font-bold">Repair Store Details</h1>
+      </div>
       {!repairStore && <h3>No Repair Store found</h3>}
       {repairStore && (
         <div>
@@ -95,32 +96,31 @@ const RepairStoreDetail = () => {
         <div key={repairStore._id}>
           <p>{repairStore.location?.lat || "No Lat"}</p>
           <p>{repairStore.location?.lng || "No Lng"}</p>
-         
-          
-          {
-                          user._id === repairStore.creator && (<>
-                          <button onClick={() => deleteHandler(repairStore._id)}>Delete</button>
-                  
-                          <button onClick={() => EditHandler(repairStore._id)}>Edit</button>
-                          </>)
-                        }
 
-{isLoaded && (
-              <GoogleMap
-                mapContainerStyle={containerStyle}
-                zoom={zoom}
-                onLoad={onLoad}>
-                <Marker
-                  position={null}
-                  label="R"
-                />
-                
-                <Polyline
-                  options={{ strokeColor: "#FF0000", strokeWeight: 2 }}
-                />
-              </GoogleMap>
-            )}             
-          
+          {user._id === repairStore.creator && (
+            <>
+              <button onClick={() => deleteHandler(repairStore._id)}>
+                Delete
+              </button>
+
+              <button onClick={() => EditHandler(repairStore._id)}>Edit</button>
+            </>
+          )}
+
+          {isLoaded && (
+            <GoogleMap
+              mapContainerStyle={containerStyle}
+              zoom={zoom}
+              onLoad={onLoad}
+              center={repairStore.location}>
+              <Marker
+                position={repairStore.lotation}
+                label="R"
+              />
+
+            
+            </GoogleMap>
+          )}
         </div>
       )}
 

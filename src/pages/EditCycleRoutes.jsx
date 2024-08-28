@@ -16,8 +16,8 @@ import CycleAPIService from "../services/cycle.api";
 const cycleService = new CycleAPIService();
 
 const containerStyle = {
-  width: "100%",
-  height: "400px",
+  width: "112%",
+  height: "100vh",
 };
 
 function EditCycleRoute() {
@@ -228,7 +228,7 @@ function EditCycleRoute() {
           {startLocation && (
             <Marker
               position={cycleroute.startLocation}
-              label="Start"
+              label="S"
               draggable={true}
               onDragStart={() => handleMarkerDragStart("start")}
               onDragEnd={event => handleMarkerDragEnd(event, setStartLocation)}
@@ -237,7 +237,7 @@ function EditCycleRoute() {
           {endLocation && (
           <Marker
             position={cycleroute.endLocation}
-            label="End"
+            label="E"
             draggable={true}
             onDragStart={() => handleMarkerDragStart("end")}
               onDragEnd={event => handleMarkerDragEnd(event, setEndLocation)}
@@ -246,13 +246,13 @@ function EditCycleRoute() {
           {startLocation && endLocation && (
             <Polyline
               path={[startLocation, endLocation]}
-              options={{ strokeColor: "red", strokeWeight: 5 }}
+              options={{ strokeColor: "#FF7F50", strokeWeight: 5 }}
             />
           )}
           {newStartLocation && newEndLocation && (
             <Polyline
               path={[newStartLocation, newEndLocation]}
-              options={{ strokeColor: "green", strokeWeight: 5 }}
+              options={{ strokeColor: "#2ecc71", strokeWeight: 5 }}
             />
           )}
           

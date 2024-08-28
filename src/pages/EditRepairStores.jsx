@@ -16,8 +16,8 @@ import CycleAPIService from "../services/cycle.api";
 const cycleService = new CycleAPIService();
 
 const containerStyle = {
-  width: "100%",
-  height: "400px",
+  width: "112%",
+  height: "100vh",
 };
 
 function EditRepairStore() {
@@ -37,31 +37,30 @@ function EditRepairStore() {
   const { user } = useContext(AuthContext);
 
   //
-  const getSingleParking = async _id => {
+  const getSingleRepairStore = async _id => {
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/api/parking/${_id}`,
       );
-      setParking(response.data);
-      setType(response.data.type);
+      setRepairStore(response.data);
+      setName(response.data.name);
       setLocation(response.data.location);
-      setQuantity(response.data.quantity);
-      setCurrentImage(response.data.parkingPic);
+      
 
       console.log(response.data);
     } catch (error) {
-      console.log("error fetching the parking", error);
+      console.log("error fetching the repair store", error);
     }
   };
   useEffect(() => {
-    getSingleParking(parkingId);
+    getSingleRepairStore(repairStoreId);
     setTimeout(() => {
       setZoom(14);
     }, 500);
-  }, [parkingId]);
+  }, [repairStoreId]);
 
-  const handleType = event => {
-    setType(event.target.value);
+  const handleName = event => {
+    setName(event.target.value);
   };
 
   const handleMapClick = event => {
@@ -73,64 +72,37 @@ function EditRepairStore() {
     setLocation({ lat, lng });
   };
 
-  const handleQuantity = event => {
-    setQuantity(event.target.value);
-  };
-  const handleParkingPic = event => {
-    setParkingPic(event.target.value);
-  };
-
-  const handleFileUpload = async event => {
-    //confoiguring how to send the file
-    const uploadData = new FormData();
-
-    uploadData.append("imgUrl", event.target.files[0]);
-
-    try {
-      setLoading(true);
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/upload`,
-        uploadData,
-      );
-      setLoading(false);
-      setParkingPic(response.data.fileUrl);
-      setCurrentImage(response.data.fileUrl);
-      console.log(response.data.fileUrl);
-    } catch (error) {
-      setLoading(false);
-      console.error(error);
-    }
-  };
+ 
+  
 
   const handleSubmit = async event => {
     event.preventDefault();
 
     try {
-      const parking = {
-        type,
+      const repairStore = {
+        name,
         location,
-        quantity,
-        parkingPic,
+        
         userId: user._id,
       };
 
       await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/parking/${parkingId}`,
-        parking,
+        `${import.meta.env.VITE_API_URL}/api/repairstore/${repairStoreId}`,
+        repairStore,
       );
 
-      navigate("/parking");
+      navigate("/repairstore");
       //`http://localhost:5005/api/cycleroutes/${_id}`
       //sem localhost
     } catch (error) {
-      console.log("error creating the parking", error);
+      console.log("error creating the repair store", error);
     }
   };
 
   const deleteHandler = async _id => {
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/api/parking/${_id}`);
-      set(parking.filter(b => b._id !== _id));
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/repairstore/${_id}`);
+      set(repairStore.filter(b => b._id !== _id));
       console.log(`Parking com ID ${_id} excluída `);
     } catch (error) {
       console.log("Erro ao excluir a parking:", error);
@@ -156,33 +128,17 @@ function EditRepairStore() {
 
   return (
     <div>
-      <h2>edit Parking</h2>
+      <h2>Edit Repair Store</h2>
       <form onSubmit={handleSubmit}>
-        <label>Type</label>
+        <label>Name</label>
         <input
           type="text"
           name="type"
-          value={type}
-          onChange={handleType}
+          value={name}
+          onChange={handleName}
         />
 
-        <label>Quantity</label>
-        <input
-          type="number"
-          name="quantity"
-          value={quantity}
-          onChange={handleQuantity}></input>
-
-        <label>Picture</label>
-        <input
-          type="file"
-          name="imgUrl"
-          onChange={handleFileUpload}></input>
-        <img
-          src={currentImage}
-          alt=""
-        />
-        <button type="submit">Edit Parking</button>
+        <button type="submit">Edit Repair Store</button>
       </form>
       {isLoaded && (
         <GoogleMap
@@ -202,4 +158,4 @@ function EditRepairStore() {
   );
 }
 
-export default EditParking;
+export default EditRepairStore;

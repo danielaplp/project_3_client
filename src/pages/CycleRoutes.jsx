@@ -10,6 +10,7 @@ import {
   Marker,
   Polyline,
 } from "@react-google-maps/api";
+import DetailCardRoutes from "../components/DetailCardRoutes";
 
 import CycleAPIService from "../services/cycle.api";
 
@@ -17,13 +18,15 @@ const cycleService = new CycleAPIService();
 
 const containerStyle = {
   width: "100%",
-  height: "400px",
+  height: "calc(100vh - 80px)",
 };
 
 function CycleRoutes() {
   const [cycleRoutes, setCycleRoutes] = useState([]);
   const [map, setMap] = useState(null);
   const [zoom, setZoom] = useState(10);
+  const [selectedRoute, setSelectedRoute] = useState(null);
+  const [polyline, setPolyline] = useState(null);
 
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
@@ -63,44 +66,83 @@ function CycleRoutes() {
     }, 500);
   }, []);
 
-  return (
-    <div>
-      <h1>Cycle Routes</h1>
+  const handleRouteClick = (routeId) => {
+    navigate(`/cycleroutes/${routeId}`);
+  };
+  const handlePolylineMouseOver = (cycleroute) => {
+    setSelectedRoute(cycleroute);
+  };
 
-      {cycleRoutes.map(cycleroute => {
-        return (
+  const handlePolylineMouseOut = () => {
+    setSelectedRoute(null);
+  };
+
+  const handlePolylineLoad = (polyline) => {
+    setPolyline(polyline);
+  };
+
+  return (
+    <div >
+       <div className="bg-green-600 text-white py-4 px-6">
+        <h1 className="text-3xl font-bold">Cycle Routes</h1>
+      </div>
+
+      {isLoaded && (
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          zoom={zoom}
+          onLoad={onLoad}
+          center={center} 
+        >
+          {cycleRoutes.map((cycleroute) => (
+            <React.Fragment key={cycleroute._id}>
+              {/* Marcador de Início */}
+              <Marker
+                position={cycleroute.startLocation}
+                label="S"
+                onClick={() => handleRouteClick(cycleroute._id)} 
+               
+              />
+              {/* Marcador de Fim */}
+              <Marker
+                position={cycleroute.endLocation}
+                label="E"
+                onClick={() => handleRouteClick(cycleroute._id)}
+               
+              />
+              {/* Polilinha para Rota */}
+              <Polyline
+                path={[cycleroute.startLocation, cycleroute.endLocation]}
+                options={{ strokeColor: "#2ecc71", strokeWeight: 5 }}
+                onMouseOver={() => handlePolylineMouseOver(cycleroute)}
+                onMouseOut={handlePolylineMouseOut}
+                onClick={() => handleRouteClick(cycleroute._id)}
+              />
+            </React.Fragment>
+          ))}
+
+{selectedRoute && (
+            <DetailCardRoutes
+              route={selectedRoute}
+              onClose={() => setSelectedRoute(null)}
+            />
+          )}
+
+
+
+        </GoogleMap>
+      )}
+
+      {/* Lista de Links para cada rota (opcional) */}
+      <div>
+        {cycleRoutes.map((cycleroute) => (
           <div key={cycleroute._id}>
             <Link to={`/cycleroutes/${cycleroute._id}`}>
-              <h2>{cycleroute.type}</h2>
+              
             </Link>
-            {/* <p>{cycleroute.startLocation?.lat || "No Lat"}</p>
-            <p>{cycleroute.startLocation?.lng || "No Lng"}</p>
-            <p>{cycleroute.endLocation?.lat || "No Lat"}</p>
-            <p>{cycleroute.endLocation?.lng || "No Lng"}</p> */}
-
-            {isLoaded && (
-              <GoogleMap
-                mapContainerStyle={containerStyle}
-                zoom={zoom}
-                onLoad={onLoad}
-                center={cycleroute.startLocation}>
-                <Marker
-                  position={cycleroute.startLocation}
-                  label="Start"
-                />
-                <Marker
-                  position={cycleroute.endLocation}
-                  label="End"
-                />
-                <Polyline
-                path={[cycleroute.startLocation, cycleroute.endLocation]}
-                  options={{ strokeColor: "green", strokeWeight: 5 }}
-                />
-              </GoogleMap>
-            )}
           </div>
-        );
-      })}
+        ))}
+      </div>
     </div>
   );
 }

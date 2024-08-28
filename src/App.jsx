@@ -11,10 +11,12 @@ import AddParking from './pages/AddParking';
 import RepairStores from './pages/RepairStores'
 import AddRepairStore from './pages/AddRepairStores'
 import RepairStoreDetail from './pages/RepairStoresDetail'
+import EditRepairStore from './pages/EditRepairStores';
 import SignUp from './pages/Auth/SignUp';
 import Login from './pages/Auth/Login';
 import Anon from './components/Anon';
 import Navbar from './components/Navbar';
+import Sidebar from './components/Sidebar'
 import './App.css'
 import { Routes, Route } from "react-router-dom"
 
@@ -22,8 +24,9 @@ import { Routes, Route } from "react-router-dom"
 function App() {
 
   return (
-      <div className='App'>
-        <Navbar />
+      <>
+          {/* <Navbar />   */}
+        <Sidebar />   
         <Routes>
         <Route path='/' element={<Homepage/>}/>
         <Route path='/cycleroutes' element={<CycleRoutes/>}/>
@@ -37,6 +40,7 @@ function App() {
         <Route path='/repairstore' element={<RepairStores/>}/>
         <Route path='/repairstore/new' element={<AddRepairStore/>}/>
         <Route path='/repairstore/:repairstoreId' element={<RepairStoreDetail/>}/>
+        <Route path='/repairstore/edit/:repairstoreId' element={<EditRepairStore/>}/>
         <Route path='/signup' element={
           <Anon>
           <SignUp/>
@@ -48,7 +52,7 @@ function App() {
 
         </Routes>
        
-    </div>
+    </>
   )
 }
 

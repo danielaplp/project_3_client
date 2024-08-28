@@ -16,7 +16,7 @@ const cycleService = new CycleAPIService();
 
 const containerStyle = {
   width: "100%",
-  height: "400px",
+  height: "calc(100vh - 80px)",
 };
 
 const ParkingDetail = () => {
@@ -25,7 +25,7 @@ const ParkingDetail = () => {
   const [zoom, setZoom] = useState(10);
 
   const { parkingId } = useParams();
-  const {user} = useContext(AuthContext)
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   console.log(parkingId);
@@ -35,36 +35,35 @@ const ParkingDetail = () => {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/api/parking/${_id}`,
       );
-      setParking(response.data); 
+      setParking(response.data);
     } catch (error) {
       console.log("error fetching the parking", error);
     }
   };
-  const deleteHandler = async (_id) => {
+  const deleteHandler = async _id => {
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/api/parking/${_id}`);
       console.log(`Parking with ID ${_id} deleted`);
     } catch (error) {
-      console.log('Error of deleting parking:', error);
+      console.log("Error of deleting parking:", error);
     }
-    navigate('/parking');
+    navigate("/parking");
   };
-  
-  const EditHandler = async (_id) => {
+
+  const EditHandler = async _id => {
     navigate(`/parking/edit/${_id}`);
-  
   };
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: `${import.meta.env.VITE_GMAPS_API_KEY}`,
   });
-  
+
   const center = {
     lat: 38.722357386512876,
     lng: -9.146005938990468,
   };
-  
+
   const onLoad = React.useCallback(function callback(map) {
     // This is just an example of getting and using the map instance!!! don't just blindly copy!
     const bounds = new window.google.maps.LatLngBounds(center);
@@ -74,16 +73,16 @@ const ParkingDetail = () => {
 
   useEffect(() => {
     getSingleParking(parkingId);
-    setTimeout(()=> {
+    setTimeout(() => {
       setZoom(14);
-    }, 500)
+    }, 500);
   }, [parkingId]);
-
-  
 
   return (
     <div>
-      <h1>Parking Details</h1>
+      <div className="bg-green-600 text-white py-4 px-6">
+        <h1 className="text-3xl font-bold">Parking Details</h1>
+      </div>
       {!parking && <h3>No Parking found</h3>}
       {parking && (
         <div>
@@ -99,33 +98,31 @@ const ParkingDetail = () => {
           <p>{parking.endLocation?.lng || "No Lng"}</p>
           <p>{parking.quantity}</p>
           <p>{parking.parkingPic}</p>
-          {
-                          user._id === parking.creator && (<>
-                          <button onClick={() => deleteHandler(parking._id)}>Delete</button>
-                  
-                          <button onClick={() => EditHandler(parking._id)}>Edit</button>
-                          </>)
-                        }
-
-{isLoaded && (
-              <GoogleMap
-                mapContainerStyle={containerStyle}
-                zoom={zoom}
-                onLoad={onLoad}>
-                <Marker
-                  position={null}
-                  label="Início"
-                />
-                <Marker
-                  position={null}
-                  label="Fim"
-                />
-                <Polyline
-                  options={{ strokeColor: "#FF0000", strokeWeight: 2 }}
-                />
-              </GoogleMap>
-            )}             
           
+          {user._id === parking.creator && (
+            <>
+              <button onClick={() => deleteHandler(parking._id)}>Delete</button>
+
+              <button onClick={() => EditHandler(parking._id)}>Edit</button>
+            </>
+          )}
+
+          {isLoaded && (
+            <GoogleMap
+              mapContainerStyle={containerStyle}
+              zoom={zoom}
+              onLoad={onLoad}>
+              <Marker
+                position={parking.location}
+                label="Início"
+              />
+              <Marker
+                position={null}
+                label="Fim"
+              />
+              <Polyline options={{ strokeColor: "#FF0000", strokeWeight: 2 }} />
+            </GoogleMap>
+          )}
         </div>
       )}
 

@@ -16,8 +16,8 @@ import CycleAPIService from "../services/cycle.api";
 const cycleService = new CycleAPIService();
 
 const containerStyle = {
-  width: "100%",
-  height: "400px",
+  width: "112%",
+  height: "100vh",
 };
 
 function EditParking() {

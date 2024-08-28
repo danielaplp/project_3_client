@@ -14,7 +14,7 @@ import {
 
 const containerStyle = {
   width: "100%",
-  height: "400px",
+  height: "calc(100vh - 80px)",
 };
 
 function AddParking() {
@@ -152,7 +152,9 @@ const handleEndLocationLng = (event) => {
 
   return (
     <div>
-      <h2>Add Parking</h2>
+    <div className="bg-green-600 text-white py-4 px-6">
+        <h1 className="text-3xl font-bold">Add Parking</h1>
+      </div>
       <form onSubmit={handleSubmit}>
         <label>Type</label>
         <input

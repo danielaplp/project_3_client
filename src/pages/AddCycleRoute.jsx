@@ -14,7 +14,7 @@ import {
 
 const containerStyle = {
   width: "100%",
-  height: "400px",
+  height: "calc(100vh - 80px)",
 };
 
 function AddCycleRoute() {
@@ -27,6 +27,7 @@ function AddCycleRoute() {
   const [map, setMap] = useState(null);
   const [startLocation, setStartLocation] = useState(null);
   const [endLocation, setEndLocation] = useState(null);
+  const [street, setStreet] = useState("")
   const [zoom, setZoom] = useState(10);
   const [polylineCreated, setPolylineCreated] = useState(false);
 
@@ -35,6 +36,9 @@ function AddCycleRoute() {
 
   const handleType = event => {
     setType(event.target.value);
+  };
+  const handleStreet = event => {
+    setStreet(event.target.value);
   };
   /* const handleStartLocationLat = (event) => {
   setStartLocationLat(event.target.value)
@@ -53,6 +57,7 @@ const handleEndLocationLng = (event) => {
     const { latLng } = event;
     const lat = latLng.lat();
     const lng = latLng.lng();
+    console.log(event)
 
     if (!startLocation) {
       setStartLocation({ lat, lng });
@@ -121,6 +126,7 @@ const handleEndLocationLng = (event) => {
           lng: endLocation.lng,
         },
         userId: user._id,
+        street,
       };
 
       await axios.post(
@@ -174,12 +180,15 @@ const handleEndLocationLng = (event) => {
 
   return (
     <div>
-      <h2>Add Cycle Route</h2>
+      <div className="bg-green-600 text-white py-4 px-6">
+        <h1 className="text-3xl font-bold">Add Cycle Route</h1>
+      </div>
       <form onSubmit={handleSubmit}>
         <label>Type</label>
         <select name="type" id="type" onChange={handleType} value={type}>
           <option value="Path"> Path</option>
-          <option value="U Turn"> U turn</option>
+          <option value="Lane"> Lane</option>
+          <option value="Zone30"> Zone30</option>
         </select>
        
         {/* 
@@ -205,7 +214,7 @@ const handleEndLocationLng = (event) => {
           {startLocation && (
             <Marker
               position={startLocation}
-              label="Start"
+              label="S"
               draggable={true}
               onDragEnd={event => handleMarkerDragEnd(event, setStartLocation)}
             />
@@ -213,7 +222,7 @@ const handleEndLocationLng = (event) => {
           {endLocation && (
             <Marker
               position={endLocation}
-              label="End"
+              label="E"
               draggable={true}
               onDragEnd={event => handleMarkerDragEnd(event, setEndLocation)}
             />
@@ -221,7 +230,7 @@ const handleEndLocationLng = (event) => {
           {startLocation && endLocation && (
             <Polyline
               path={[startLocation, endLocation]}
-              options={{ strokeColor: "green", strokeWeight: 5 }}
+              options={{ strokeColor: "#2ecc71", strokeWeight: 4 }}
             />
           )}
           {/* <Marker
