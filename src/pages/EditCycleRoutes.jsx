@@ -10,14 +10,29 @@ import {
   Marker,
   Polyline,
 } from "@react-google-maps/api";
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  FormControl,
+  FormLabel,
+  Input,
+  Stack,
+  Textarea,
+  Heading,
+  useToast,
+  Select,
+} from "@chakra-ui/react";
+
 
 import CycleAPIService from "../services/cycle.api";
 
 const cycleService = new CycleAPIService();
 
 const containerStyle = {
-  width: "112%",
-  height: "100vh",
+  width: "100%",
+  height: "calc(100vh - 80px)",
 };
 
 function EditCycleRoute() {
@@ -175,49 +190,57 @@ function EditCycleRoute() {
 
   const onLoad = React.useCallback(function callback(map) {
     // This is just an example of getting and using the map instance!!! don't just blindly copy!
-    const bounds = new window.google.maps.LatLngBounds(center);
-    map.fitBounds(bounds);
+  /*   const bounds = new window.google.maps.LatLngBounds(center);
+    map.fitBounds(bounds); */
     setMap(map);
   }, []);
 
   return (
     <div>
-      <h2>edit Cycle Route</h2>
+      <Center bg="green.600" color="white" py={3} mb={2}>
+      <Heading as="h1" size="xl">Edit Cycle Route</Heading>
+      </Center>
+    
+      {/* <h2>edit Cycle Route</h2> */}
+      <Flex justify="flex-start">
+        <Box w={{ base: "60%", md: "50%", lg: "30%" }} p={4} borderWidth={2} borderRadius="md" boxShadow="md">
       <form onSubmit={handleSubmit}>
-        <label>Type</label>
+       {/*  <label>Type</label>
         <input
           type="text"
           name="type"
           value={type}
           onChange={handleType}
-        />
+        /> */}
+        <Stack spacing={4}>
+              <FormControl id="type" isRequired>
+                <FormLabel>Type</FormLabel>
+                <Select
+                  type="text"
+                  placeholder="Enter route type"
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                  >
+                    <option value="Path"> Path</option>
+          <option value="Lane"> Lane</option>
+          <option value="Zone30"> Zone30</option>
 
-        {/* <label>Start Location</label>
-        <input
-          type="number"
-          name="start location"
-          value={startLocationLat}
-          onChange={handleStartLocationLat}></input>
-        <input
-          type="number"
-          name="start location"
-          value={startLocationLng}
-          onChange={handleStartLocationLng}></input>
+                    </Select>
+              
+              </FormControl>
 
-        <label>End Location</label>
-        <input
-          type="number"
-          name="end location"
-          value={endLocationLat}
-          onChange={handleEndLocationLat}></input>
-        <input
-          type="number"
-          name="end location"
-          value={endLocationLng}
-          onChange={handleEndLocationLng}></input> */}
-
-        <button type="submit">Edit Cycle Route</button>
-      </form>
+              <Button type="submit" colorScheme="red" mt={4}>Edit Cycle Route</Button>
+        {/* <button type="submit">Edit Cycle Route</button> */}
+      {/* </form> */}
+      <Button
+                        colorScheme="gray"
+                        onClick={() => navigate("/cycleroutes")}>
+                        Back to Cycle Routes
+                      </Button>
+      </Stack>
+          </form>
+        </Box>
+      </Flex>
       {isLoaded && (
         <GoogleMap
           mapContainerStyle={containerStyle}

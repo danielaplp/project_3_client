@@ -1,4 +1,4 @@
-import React from "react";
+ import React from "react";
 import { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +11,21 @@ import {
   Marker,
   Polyline,
 } from "@react-google-maps/api";
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  FormControl,
+  FormLabel,
+  Input,
+  Stack,
+  Textarea,
+  Heading,
+  useToast,
+  Select,
+} from "@chakra-ui/react";
+
 
 const containerStyle = {
   width: "100%",
@@ -40,18 +55,7 @@ function AddCycleRoute() {
   const handleStreet = event => {
     setStreet(event.target.value);
   };
-  /* const handleStartLocationLat = (event) => {
-  setStartLocationLat(event.target.value)
-}
-const handleStartLocationLng = (event) => {
-  setStartLocationLng(event.target.value)
-}
-const handleEndLocationLat = (event) => {
-  setEndLocationLat(event.target.value)
-}
-const handleEndLocationLng = (event) => {
-  setEndLocationLng(event.target.value)
-} */
+  
 
   const handleMapClick = event => {
     const { latLng } = event;
@@ -69,25 +73,7 @@ const handleEndLocationLng = (event) => {
     }
   };
 
-  /*   if (!startLocationLat && !startLocationLng) {
-    setStartLocationLat({ lat, lng });
-    setStartLocationLng({ lat, lng });
-  } 
-  
-  else if (!endLocationLat && !endLocationLng) {
-    setEndLocationLat({ lat, lng });
-    setEndLocationLng({ lat, lng });
-    setPolylineCreated(true)
-  } 
-  
-  else {
-    setStartLocationLat({ lat, lng });
-    setStartLocationLng({ lat, lng });
-    setEndLocationLat(null);
-    setEndLocationLng(null);
-  }
-}; */
-
+ 
   const handleMarkerDragEnd = (event, setLocation) => {
     setLocation({ lat: event.latLng.lat(), lng: event.latLng.lng() });
   };
@@ -107,14 +93,7 @@ const handleEndLocationLng = (event) => {
       return;
     }
     try {
-      /*  const cycleRoute ={
-          type, startLocation: {
-            lat: startLocationLat,
-            lng: startLocationLng
-          }, endLocation: {
-            lat: endLocationLat,
-            lng: endLocationLng
-          }, */
+      
       const cycleRoute = {
         type,
         startLocation: {
@@ -167,7 +146,7 @@ const handleEndLocationLng = (event) => {
   const onLoad = React.useCallback(function callback(map) {
     // This is just an example of getting and using the map instance!!! don't just blindly copy!
     const bounds = new window.google.maps.LatLngBounds(center);
-    map.fitBounds(bounds);
+    map.fitBounds(bounds); 
     setMap(map);
   }, []);
 
@@ -180,7 +159,42 @@ const handleEndLocationLng = (event) => {
 
   return (
     <div>
-      <div className="bg-green-600 text-white py-4 px-6">
+   <Box>
+    
+    <Center bg="green.600" color="white" py={3} mb={2}>
+      <Heading as="h1" size="xl">Add New Cycle Route</Heading>
+    </Center>
+       <Flex justify="flex-start">
+        <Box w={{ base: "60%", md: "50%", lg: "30%" }} p={4} borderWidth={2} borderRadius="md" boxShadow="md">
+          <form onSubmit={handleSubmit}>
+            <Stack spacing={4}>
+              <FormControl id="type" isRequired>
+                <FormLabel>Type</FormLabel>
+                <Select
+                  type="text"
+                  placeholder="Enter route type"
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                  >
+                    <option value="Path"> Path</option>
+          <option value="Lane"> Lane</option>
+          <option value="Zone30"> Zone30</option>
+
+                    </Select>
+              
+              </FormControl>
+
+            
+
+              <Button type="submit" colorScheme="red" mt={4}>Add Cycle Route</Button>
+              <Button colorScheme="green" onClick={() => navigate("/cycleroutes")}>
+          Back to Cycle Routes
+        </Button>
+            </Stack>
+          </form>
+        </Box>
+      </Flex>
+     {/*  <div className="bg-green-600 text-white py-4 px-6">
         <h1 className="text-3xl font-bold">Add Cycle Route</h1>
       </div>
       <form onSubmit={handleSubmit}>
@@ -191,18 +205,9 @@ const handleEndLocationLng = (event) => {
           <option value="Zone30"> Zone30</option>
         </select>
        
-        {/* 
-      <label>Start Location</label>
-      <input type="number" name="start location" value={startLocationLat} onChange={handleStartLocationLat} ></input>
-      <input type="number" name="start location" value={startLocationLng} onChange={handleStartLocationLng}></input>
-      
-      
-      <label>End Location</label>
-      <input type="number" name="end location" value={endLocationLat} onChange={handleEndLocationLat} ></input>
-      <input type="number" name="end location" value={endLocationLng} onChange={handleEndLocationLng} ></input>
-       */}
+       
         <button type="submit">Add Cycle Route</button>
-      </form>
+      </form> */}
 
       {isLoaded && (
         <GoogleMap
@@ -233,21 +238,115 @@ const handleEndLocationLng = (event) => {
               options={{ strokeColor: "#2ecc71", strokeWeight: 4 }}
             />
           )}
-          {/* <Marker
-                  position={null}
-                  label="Início"
-                />
-                <Marker
-                  position={null}
-                  label="Fim"
-                />
-                <Polyline
-                  options={{ strokeColor: "#FF0000", strokeWeight: 2 }}
-                /> */}
+         
         </GoogleMap>
+        
+        
       )}
+      </Box>
     </div>
+    
   );
 }
 
 export default AddCycleRoute;
+ 
+
+ {/* import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { AuthContext } from "../contexts/auth.context";
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  FormControl,
+  FormLabel,
+  Input,
+  Stack,
+  Textarea,
+  Heading,
+  useToast,
+  Select,
+} from "@chakra-ui/react";
+
+const AddCycleRoute = () => {
+  const [type, setType] = useState("");
+  const [startLocation, setStartLocation] = useState({ lat: "", lng: "" });
+  const [endLocation, setEndLocation] = useState({ lat: "", lng: "" });
+  const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
+  const toast = useToast();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const newCycleRoute = {
+        type,
+        startLocation,
+        endLocation,
+        creator: user._id,
+      };
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/cycleroutes`, newCycleRoute);
+      toast({
+        title: "Cycle Route added.",
+        description: "Your new cycle route has been added successfully.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      navigate("/cycleroutes");
+    } catch (error) {
+      console.error("Error adding cycle route:", error);
+      toast({
+        title: "An error occurred.",
+        description: "Unable to add cycle route. Please try again.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+
+  return (
+    <Box>
+    
+      <Center bg="green.600" color="white" py={3} mb={2}>
+        <Heading as="h1" size="xl">Add New Cycle Route</Heading>
+      </Center>
+
+    
+      <Flex justify="flex-start">
+        <Box w={{ base: "60%", md: "50%", lg: "30%" }} p={4} borderWidth={2} borderRadius="md" boxShadow="md">
+          <form onSubmit={handleSubmit}>
+            <Stack spacing={4}>
+              <FormControl id="type" isRequired>
+                <FormLabel>Type</FormLabel>
+                <Select
+                  type="text"
+                  placeholder="Enter route type"
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                  >
+                    <option value="Path"> Path</option>
+          <option value="Lane"> Lane</option>
+          <option value="Zone30"> Zone30</option>
+
+                    </Select>
+              
+              </FormControl>
+
+            
+
+              <Button type="submit" colorScheme="red" mt={4}>Add Cycle Route</Button>
+            </Stack>
+          </form>
+        </Box>
+      </Flex>
+    </Box>
+  );
+};
+
+export default AddCycleRoute;  */}
+

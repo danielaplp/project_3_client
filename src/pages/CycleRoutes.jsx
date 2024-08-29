@@ -10,6 +10,22 @@ import {
   Marker,
   Polyline,
 } from "@react-google-maps/api";
+
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  FormControl,
+  FormLabel,
+  Input,
+  Stack,
+  Textarea,
+  Heading,
+  useToast,
+  Select,
+} from "@chakra-ui/react";
+
 import DetailCardRoutes from "../components/DetailCardRoutes";
 
 import CycleAPIService from "../services/cycle.api";
@@ -19,6 +35,7 @@ const cycleService = new CycleAPIService();
 const containerStyle = {
   width: "100%",
   height: "calc(100vh - 80px)",
+
 };
 
 function CycleRoutes() {
@@ -66,10 +83,10 @@ function CycleRoutes() {
     }, 500);
   }, []);
 
-  const handleRouteClick = (routeId) => {
+  const handleRouteClick = routeId => {
     navigate(`/cycleroutes/${routeId}`);
   };
-  const handlePolylineMouseOver = (cycleroute) => {
+  const handlePolylineMouseOver = cycleroute => {
     setSelectedRoute(cycleroute);
   };
 
@@ -77,69 +94,77 @@ function CycleRoutes() {
     setSelectedRoute(null);
   };
 
-  const handlePolylineLoad = (polyline) => {
+  const handlePolylineLoad = polyline => {
     setPolyline(polyline);
   };
 
   return (
-    <div >
-       <div className="bg-green-600 text-white py-4 px-6">
-        <h1 className="text-3xl font-bold">Cycle Routes</h1>
-      </div>
+    <div>
+      <Box>
+        <Stack
+          direction={["column", "row"]}
+          bg="green.600"
+          color="white"
+          p={3}
+          mb={2}
+          justifyContent={"space-between"}>
+          <Heading
+            as="h1"
+            size="xl"
+            py={2}
+            px={6}>
+            Cycle Routes
+          </Heading>
 
-      {isLoaded && (
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          zoom={zoom}
-          onLoad={onLoad}
-          center={center} 
-        >
-          {cycleRoutes.map((cycleroute) => (
-            <React.Fragment key={cycleroute._id}>
-              {/* Marcador de Início */}
-              <Marker
-                position={cycleroute.startLocation}
-                label="S"
-                onClick={() => handleRouteClick(cycleroute._id)} 
-               
+          <Link to={"/cycleroutes/new"}>
+            <Button py={5}>Add New</Button>
+          </Link>
+        </Stack>
+
+        {isLoaded && (
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            zoom={zoom}
+            onLoad={onLoad}
+            center={center}>
+            {cycleRoutes.map(cycleroute => (
+              <React.Fragment key={cycleroute._id}>
+                <Marker
+                  position={cycleroute.startLocation}
+                  label="S"
+                  onClick={() => handleRouteClick(cycleroute._id)}
+                />
+
+                <Marker
+                  position={cycleroute.endLocation}
+                  label="E"
+                  onClick={() => handleRouteClick(cycleroute._id)}
+                />
+
+                <Polyline
+                  path={[cycleroute.startLocation, cycleroute.endLocation]}
+                  options={{ strokeColor: "#2ecc71", strokeWeight: 5 }}
+                  onMouseOver={() => handlePolylineMouseOver(cycleroute)}
+                  onMouseOut={handlePolylineMouseOut}
+                  onClick={() => handleRouteClick(cycleroute._id)}
+                />
+              </React.Fragment>
+            ))}
+
+            {selectedRoute && (
+              <DetailCardRoutes
+                route={selectedRoute}
+                onClose={() => setSelectedRoute(null)}
               />
-              {/* Marcador de Fim */}
-              <Marker
-                position={cycleroute.endLocation}
-                label="E"
-                onClick={() => handleRouteClick(cycleroute._id)}
-               
-              />
-              {/* Polilinha para Rota */}
-              <Polyline
-                path={[cycleroute.startLocation, cycleroute.endLocation]}
-                options={{ strokeColor: "#2ecc71", strokeWeight: 5 }}
-                onMouseOver={() => handlePolylineMouseOver(cycleroute)}
-                onMouseOut={handlePolylineMouseOut}
-                onClick={() => handleRouteClick(cycleroute._id)}
-              />
-            </React.Fragment>
-          ))}
+            )}
+          </GoogleMap>
+        )}
+      </Box>
 
-{selectedRoute && (
-            <DetailCardRoutes
-              route={selectedRoute}
-              onClose={() => setSelectedRoute(null)}
-            />
-          )}
-
-
-
-        </GoogleMap>
-      )}
-
-      {/* Lista de Links para cada rota (opcional) */}
       <div>
-        {cycleRoutes.map((cycleroute) => (
+        {cycleRoutes.map(cycleroute => (
           <div key={cycleroute._id}>
-            <Link to={`/cycleroutes/${cycleroute._id}`}>
-              
-            </Link>
+            <Link to={`/cycleroutes/${cycleroute._id}`}></Link>
           </div>
         ))}
       </div>

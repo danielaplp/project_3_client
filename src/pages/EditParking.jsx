@@ -11,6 +11,21 @@ import {
   Polyline,
 } from "@react-google-maps/api";
 
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  FormControl,
+  FormLabel,
+  Input,
+  Stack,
+  Textarea,
+  Heading,
+  useToast,
+  Select,
+} from "@chakra-ui/react";
+
 import CycleAPIService from "../services/cycle.api";
 
 const cycleService = new CycleAPIService();
@@ -48,6 +63,7 @@ function EditParking() {
       setType(response.data.type);
       setLocation(response.data.location);
       setQuantity(response.data.quantity);
+      setParkingPic(response.data.parkingPic);
       setCurrentImage(response.data.parkingPic);
 
       console.log(response.data);
@@ -97,6 +113,7 @@ function EditParking() {
       setLoading(false);
       setParkingPic(response.data.fileUrl);
       setCurrentImage(response.data.fileUrl);
+      setLoading(false);
       console.log(response.data.fileUrl);
     } catch (error) {
       setLoading(false);
@@ -158,46 +175,98 @@ function EditParking() {
 
   return (
     <div>
-      <h2>edit Parking</h2>
-      <form onSubmit={handleSubmit}>
-        <label>Type</label>
-        <input
-          type="text"
-          name="type"
-          value={type}
-          onChange={handleType}
-        />
+      <Center
+        bg="green.600"
+        color="white"
+        py={3}
+        mb={2}>
+        <Heading
+          as="h1"
+          size="xl">
+          Edit Parking
+        </Heading>
+      </Center>
 
-        <label>Quantity</label>
-        <input
-          type="number"
-          name="quantity"
-          value={quantity}
-          onChange={handleQuantity}></input>
+      <Flex justify="flex-start">
+        <Box
+          w={{ base: "60%", md: "50%", lg: "30%" }}
+          p={4}
+          borderWidth={2}
+          borderRadius="md"
+          boxShadow="md">
+          <form onSubmit={handleSubmit}>
+            <Stack spacing={4}>
+              <FormControl
+                id="type"
+                isRequired>
+                <FormLabel>Type</FormLabel>
+                <Input
+                  type="text"
+                  value={type}
+                  onChange={e => setType(e.target.value)}
+                />
+              </FormControl>
 
-        <label>Picture</label>
-        <input
-          type="file"
-          name="imgUrl"
-          onChange={handleFileUpload}></input>
-        <img
-          src={currentImage}
-          alt=""
-        />
-        <button type="submit">Edit Parking</button>
-      </form>
+              <FormControl
+                id="quantity"
+                isRequired>
+                <FormLabel>Quantity</FormLabel>
+                <Input
+                  type="number"
+                  value={quantity}
+                  onChange={e => setQuantity(e.target.value)}
+                />
+              </FormControl>
+
+              <FormControl id="parkingPic">
+                <FormLabel>Picture</FormLabel>
+                <Input
+                  type="file"
+                  onChange={handleFileUpload}
+                />
+                {currentImage && (
+                  <img
+                    src={currentImage}
+                    alt="Current parking pic"
+                    style={{ maxWidth: "100%", marginTop: "8px" }}
+                  />
+                )}
+              </FormControl>
+
+              <Button
+                type="submit"
+                colorScheme="red"
+                mt={4}>
+                Edit Parking
+              </Button>
+              <Button
+                colorScheme="gray"
+                onClick={() => navigate("/parking")}>
+                Back to Parkings
+              </Button>
+            </Stack>
+          </form>
+        </Box>
+      </Flex>
+
       {isLoaded && (
         <GoogleMap
           mapContainerStyle={containerStyle}
           zoom={zoom}
           onLoad={onLoad}
           onClick={handleMapClick}>
-          <Marker
-            position={location}
-            label="P"
-          />
-
-          <Polyline options={{ strokeColor: "#FF0000", strokeWeight: 2 }} />
+          {location && (
+            <Marker
+              position={location}
+              label="P"
+            />
+          )}
+          {location && (
+            <Polyline
+              path={[location]}
+              options={{ strokeColor: "#FF0000", strokeWeight: 2 }}
+            />
+          )}
         </GoogleMap>
       )}
     </div>

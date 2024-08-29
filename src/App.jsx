@@ -40,7 +40,7 @@ function App() {
         <Route path='/repairstore' element={<RepairStores/>}/>
         <Route path='/repairstore/new' element={<AddRepairStore/>}/>
         <Route path='/repairstore/:repairstoreId' element={<RepairStoreDetail/>}/>
-        <Route path='/repairstore/edit/:repairstoreId' element={<EditRepairStore/>}/>
+        <Route path='/repairstore/edit/:repairStoreId' element={<EditRepairStore/>}/>
         <Route path='/signup' element={
           <Anon>
           <SignUp/>

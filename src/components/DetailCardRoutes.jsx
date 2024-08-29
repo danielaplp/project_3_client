@@ -8,7 +8,7 @@ const DetailCardRoutes = ({ route, onClose }) => {
       position="absolute"
       bg="white"
       border="1px"
-      borderColor="gray.200"
+      borderColor="gray.500"
       borderRadius="md"
       boxShadow="md"
       p={4}

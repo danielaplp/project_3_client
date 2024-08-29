@@ -12,6 +12,21 @@ import {
   Polyline,
 } from "@react-google-maps/api";
 
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  FormControl,
+  FormLabel,
+  Input,
+  Stack,
+  Textarea,
+  Heading,
+  useToast,
+  Select,
+} from "@chakra-ui/react";
+
 const containerStyle = {
   width: "100%",
   height: "calc(100vh - 80px)",
@@ -20,10 +35,6 @@ const containerStyle = {
 function AddParking() {
   const [parkings, setParkings] = useState([]);
   const [type, setType] = useState("");
-  /* const [startLocationLat, setStartLocationLat] = useState(0);
-  const [startLocationLng, setStartLocationLng] = useState(0);
-  const [endLocationLat, setEndLocationLat] = useState(0);
-  const [endLocationLng, setEndLocationLng] = useState(0); */
   const [location, setLocation] = useState(null);
   const [quantity, setQuantity] = useState(0);
   const [parkingPic, setParkingPic] = useState("");
@@ -38,18 +49,7 @@ function AddParking() {
   const handleType = event => {
     setType(event.target.value);
   };
-  /* const handleStartLocationLat = (event) => {
-  setStartLocationLat(event.target.value)
-}
-const handleStartLocationLng = (event) => {
-  setStartLocationLng(event.target.value)
-}
-const handleEndLocationLat = (event) => {
-  setEndLocationLat(event.target.value)
-}
-const handleEndLocationLng = (event) => {
-  setEndLocationLng(event.target.value)
-} */
+
   const handleQuantity = event => {
     setQuantity(event.target.value);
   };
@@ -91,7 +91,7 @@ const handleEndLocationLng = (event) => {
   const handleSubmit = async event => {
     event.preventDefault();
     if (!location || !location.lat || !location.lng) {
-      alert("Please select both start and end locations.");
+      alert("Please select the location.");
       return;
     }
     try {
@@ -152,12 +152,22 @@ const handleEndLocationLng = (event) => {
 
   return (
     <div>
-    <div className="bg-green-600 text-white py-4 px-6">
+    {/* <div className="bg-green-600 text-white py-4 px-6">
         <h1 className="text-3xl font-bold">Add Parking</h1>
-      </div>
+      </div> */}
+      <Box>
+    
+    <Center bg="green.600" color="white" py={3} mb={2}>
+      <Heading as="h1" size="xl">Add New Parking</Heading>
+    </Center>
+       <Flex justify="flex-start">
+        <Box w={{ base: "60%", md: "50%", lg: "30%" }} p={4} borderWidth={2} borderRadius="md" boxShadow="md">
       <form onSubmit={handleSubmit}>
-        <label>Type</label>
-        <input
+      <Stack spacing={4}>
+      <FormControl id="type" >
+        {/* <label>Type</label> */}
+        <FormLabel>Type</FormLabel>
+        <Input
           type="text"
           name="type"
           value={type}
@@ -173,25 +183,33 @@ const handleEndLocationLng = (event) => {
       <input type="number" name="end location" value={endLocationLat} onChange={handleEndLocationLat}></input>
       <input type="number" name="end location" value={endLocationLng} onChange={handleEndLocationLng}></input>
  */}
-        <label>Quantity</label>
-        <input
+        <FormLabel>Quantity</FormLabel>
+        <Input
           type="number"
           name="quantity"
           value={quantity}
-          onChange={handleQuantity}></input>
+          onChange={handleQuantity}></Input>
 
-        <label>Picture</label>
-        <input
+        <FormLabel>Picture</FormLabel>
+        <Input
           type="file"
           name="imgUrl"
-          onChange={handleFileUpload}></input>
+          onChange={handleFileUpload}></Input>
+           </FormControl>
 
-        <button
+        <Button
+        colorScheme="red"
           type="submit"
           disabled={loading}>
           Add Parking
-        </button>
-      </form>
+        </Button>
+        <Button colorScheme="green" onClick={() => navigate("/parking")}>
+        Back to Parkings
+        </Button>
+        </Stack>
+          </form>
+        </Box>
+      </Flex>
 
       {isLoaded && (
         <GoogleMap
@@ -203,7 +221,7 @@ const handleEndLocationLng = (event) => {
             {location && (
           <Marker
             position={location}
-            label="Start"
+            label="P"
             draggable={true}
               onDragEnd={event => handleMarkerDragEnd(event, setLocation)}
           />
@@ -212,6 +230,7 @@ const handleEndLocationLng = (event) => {
           
         </GoogleMap>
       )}
+      </Box>
     </div>
   );
 }

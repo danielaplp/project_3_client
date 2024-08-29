@@ -11,6 +11,21 @@ import {
   Polyline,
 } from "@react-google-maps/api";
 
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  FormControl,
+  FormLabel,
+  Input,
+  Stack,
+  Textarea,
+  Heading,
+  useToast,
+  Select,
+} from "@chakra-ui/react";
+
 import CycleAPIService from "../services/cycle.api";
 
 const cycleService = new CycleAPIService();
@@ -40,7 +55,7 @@ function EditRepairStore() {
   const getSingleRepairStore = async _id => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/parking/${_id}`,
+        `${import.meta.env.VITE_API_URL}/api/repairstore/${_id}`,
       );
       setRepairStore(response.data);
       setName(response.data.name);
@@ -52,6 +67,7 @@ function EditRepairStore() {
       console.log("error fetching the repair store", error);
     }
   };
+  
   useEffect(() => {
     getSingleRepairStore(repairStoreId);
     setTimeout(() => {
@@ -128,18 +144,54 @@ function EditRepairStore() {
 
   return (
     <div>
-      <h2>Edit Repair Store</h2>
-      <form onSubmit={handleSubmit}>
-        <label>Name</label>
-        <input
-          type="text"
-          name="type"
-          value={name}
-          onChange={handleName}
-        />
+      <Center
+        bg="green.600"
+        color="white"
+        py={3}
+        mb={2}>
+        <Heading
+          as="h1"
+          size="xl">
+          Edit Repair Store
+        </Heading>
+      </Center>
 
-        <button type="submit">Edit Repair Store</button>
+      <Flex justify="flex-start">
+        <Box
+          w={{ base: "60%", md: "50%", lg: "30%" }}
+          p={4}
+          borderWidth={2}
+          borderRadius="md"
+          boxShadow="md">
+
+      <form onSubmit={handleSubmit}>
+      <Stack spacing={4}>
+              <FormControl
+                id="type"
+                isRequired>
+                <FormLabel>Name</FormLabel>
+                <Input
+                  type="text"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                />
+              </FormControl>
+              <Button
+                type="submit"
+                colorScheme="red"
+                mt={4}>
+                Edit Repair Store
+              </Button>
+              <Button
+                colorScheme="gray"
+                onClick={() => navigate("/repairstore")}>
+                Back to Repair Stores
+              </Button>
+              </Stack>
+     
       </form>
+      </Box>
+      </Flex>
       {isLoaded && (
         <GoogleMap
           mapContainerStyle={containerStyle}

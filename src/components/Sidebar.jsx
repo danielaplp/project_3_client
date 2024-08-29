@@ -88,7 +88,7 @@ function Sidebar() {
                         </Button>
                       </Link>
                     </li>
-                    <li>
+                   {/*  <li>
                       <Link
                         to="/cycleroutes/new"
                         onClick={onClose}>
@@ -101,7 +101,7 @@ function Sidebar() {
                           Add a Cycle Route
                         </Button>
                       </Link>
-                    </li>
+                    </li> */}
                     <li>
                       <Link
                         to="/parking"
@@ -116,7 +116,7 @@ function Sidebar() {
                         </Button>
                       </Link>
                     </li>
-                    <li>
+                    {/* <li>
                       <Link
                         to="/parking/new"
                         onClick={onClose}>
@@ -129,7 +129,7 @@ function Sidebar() {
                           Add a Parking
                         </Button>
                       </Link>
-                    </li>
+                    </li> */}
                     <li>
                       <Link
                         to="/repairstore"
@@ -144,7 +144,7 @@ function Sidebar() {
                         </Button>
                       </Link>
                     </li>
-                    <li>
+                    {/* <li>
                       <Link
                         to="/repairstore/new"
                         onClick={onClose}>
@@ -157,7 +157,7 @@ function Sidebar() {
                           Add a Repair Store
                         </Button>
                       </Link>
-                    </li>
+                    </li> */}
                     <li>
                       <Button
                         onClick={() => {

@@ -11,6 +11,21 @@ import {
   Polyline,
 } from "@react-google-maps/api";
 
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  FormControl,
+  FormLabel,
+  Input,
+  Stack,
+  Textarea,
+  Heading,
+  useToast,
+  Select,
+} from "@chakra-ui/react";
+
 import CycleAPIService from "../services/cycle.api";
 import DetailCardRepairStores from "../components/DetailCardRepairStores";
 
@@ -25,7 +40,7 @@ function RepairStores() {
   const [repairStores, setRepairStores] = useState([]);
   const [map, setMap] = useState(null);
   const [zoom, setZoom] = useState(10);
-  const [location, setLocation] = useState(null)
+  const [location, setLocation] = useState(null);
   const [selectedRepairStore, setSelectedRepairStore] = useState(null);
 
   const navigate = useNavigate();
@@ -66,55 +81,70 @@ function RepairStores() {
     }, 500);
   }, []);
 
-  const handleRepairStoreClick = (repairStoreId) => {
+  const handleRepairStoreClick = repairStoreId => {
     navigate(`/repairstore/${repairStoreId}`);
   };
 
-  const handleMarkerMouseOver = (repairstore) => {
+  const handleMarkerMouseOver = repairstore => {
     setSelectedRepairStore(repairstore);
   };
-  
+
   const handleMarkerMouseOut = () => {
     setSelectedRepairStore(null);
   };
-  
+
   return (
     <div>
-      <div className="bg-green-600 text-white py-4 px-6">
-        <h1 className="text-3xl font-bold">Repair Stores</h1>
-      </div>
-      
-      {isLoaded && (
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          zoom={zoom}
-          onLoad={onLoad}
-          center={center} // Center map to a central location or calculate dynamically
-        >
-          {repairStores.map((repairstore) => (
-            <Marker
-              key={repairstore._id}
-              position={repairstore.location}
-              label="R"
-              onClick={() => handleRepairStoreClick(repairstore._id)}
-              onMouseOver={() => handleMarkerMouseOver(repairstore)}
-              onMouseOut={handleMarkerMouseOut}
+      <Box>
+        <Stack
+         direction={["column", "row"]}
+          bg="green.600"
+          color="white"
+          py={3}
+          mb={2}
+          justifyContent={"space-between"}>
+          <Heading
+            as="h1"
+            size="xl"
+            py={2}
+            px={6}>
+            Repair Stores
+          </Heading>
+          <Link to={"/repairstore/new"}>
+            <Button py={5}>Add New</Button>
+          </Link>
+        </Stack>
+
+        {isLoaded && (
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            zoom={zoom}
+            onLoad={onLoad}
+            center={center} 
+          >
+            {repairStores.map(repairstore => (
+              <Marker
+                key={repairstore._id}
+                position={repairstore.location}
+                label="R"
+                onClick={() => handleRepairStoreClick(repairstore._id)}
+                onMouseOver={() => handleMarkerMouseOver(repairstore)}
+                onMouseOut={handleMarkerMouseOut}
               />
-          ))}
+            ))}
 
-{selectedRepairStore && (
-            <DetailCardRepairStores
-              repairstore={selectedRepairStore}
-              onClose={() => setSelectedRepairStore(null)}
-            />
-          )}
-
-        </GoogleMap>
-      )}
-
+            {selectedRepairStore && (
+              <DetailCardRepairStores
+                repairstore={selectedRepairStore}
+                onClose={() => setSelectedRepairStore(null)}
+              />
+            )}
+          </GoogleMap>
+        )}
+      </Box>
       {/* List of repair stores with links */}
       <div>
-        {repairStores.map((repairstore) => (
+        {repairStores.map(repairstore => (
           <div key={repairstore._id}>
             <Link to={`/repairstore/${repairstore._id}`}>
               {/* <h2>{repairstore.name}</h2> */}
@@ -122,22 +152,16 @@ function RepairStores() {
             {/* <p>{repairstore.description || "No description available"}</p> */}
             {/* Conditionally render content based on user permissions */}
             {user._id === repairstore.creator && (
-              <>
-                {/* Add buttons or links for edit/delete if needed */}
-              </>
+              <>{/* Add buttons or links for edit/delete if needed */}</>
             )}
           </div>
         ))}
       </div>
     </div>
   );
-  
 }
 
 export default RepairStores;
-
-
-
 
 /* return (
     <div>

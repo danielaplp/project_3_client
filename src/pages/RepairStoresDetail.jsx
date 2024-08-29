@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import CycleAPIService from "../services/cycle.api";
@@ -7,13 +7,21 @@ import { AuthContext } from "../contexts/auth.context";
 import {
   GoogleMap,
   useJsApiLoader,
-  LoadScript,
   Marker,
-  Polyline,
 } from "@react-google-maps/api";
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  FormControl,
+  FormLabel,
+  Input,
+  Stack,
+  Heading,
+} from "@chakra-ui/react";
 
 const cycleService = new CycleAPIService();
-
 const containerStyle = {
   width: "100%",
   height: "calc(100vh - 80px)",
@@ -21,14 +29,12 @@ const containerStyle = {
 
 const RepairStoreDetail = () => {
   const [repairStore, setRepairStore] = useState(null);
-  const [map, setMap] = useState(null);
   const [zoom, setZoom] = useState(10);
+  const [loadedRepairStore, setLoadedRepairStore] = useState(false);
 
   const { repairstoreId } = useParams();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-
-  console.log(repairstoreId);
 
   const getSingleRepairStore = async _id => {
     try {
@@ -36,20 +42,23 @@ const RepairStoreDetail = () => {
         `${import.meta.env.VITE_API_URL}/api/repairstore/${_id}`,
       );
       setRepairStore(response.data);
+      setLoadedRepairStore(true);
     } catch (error) {
-      console.log("error fetching the repair store", error);
+      setLoadedRepairStore(false);
+      console.log("Error fetching the repair store", error);
     }
   };
+
   const deleteHandler = async _id => {
     try {
       await axios.delete(
         `${import.meta.env.VITE_API_URL}/api/repairstore/${_id}`,
       );
       console.log(`Repair Store with ID ${_id} deleted`);
+      navigate("/repairstore");
     } catch (error) {
-      console.log("Error of deleting repair store", error);
+      console.log("Error deleting repair store", error);
     }
-    navigate("/repairstore");
   };
 
   const EditHandler = async _id => {
@@ -61,18 +70,6 @@ const RepairStoreDetail = () => {
     googleMapsApiKey: `${import.meta.env.VITE_GMAPS_API_KEY}`,
   });
 
-  const center = {
-    lat: 38.722357386512876,
-    lng: -9.146005938990468,
-  };
-
-  const onLoad = React.useCallback(function callback(map) {
-    // This is just an example of getting and using the map instance!!! don't just blindly copy!
-    const bounds = new window.google.maps.LatLngBounds(center);
-    map.fitBounds(bounds);
-    setMap(map);
-  }, []);
-
   useEffect(() => {
     getSingleRepairStore(repairstoreId);
     setTimeout(() => {
@@ -82,51 +79,62 @@ const RepairStoreDetail = () => {
 
   return (
     <div>
-     <div className="bg-green-600 text-white py-4 px-6">
-        <h1 className="text-3xl font-bold">Repair Store Details</h1>
-      </div>
-      {!repairStore && <h3>No Repair Store found</h3>}
-      {repairStore && (
-        <div>
-          <h2>{repairStore.name}</h2>
-        </div>
-      )}
+      <Box>
+        <Center bg="green.600" color="white" py={3} mb={2}>
+          <Heading as="h1" size="xl">Repair Store Details</Heading>
+        </Center>
+        {!repairStore && <h3>No Repair Store found</h3>}
 
-      {repairStore && (
-        <div key={repairStore._id}>
-          <p>{repairStore.location?.lat || "No Lat"}</p>
-          <p>{repairStore.location?.lng || "No Lng"}</p>
-
-          {user._id === repairStore.creator && (
-            <>
-              <button onClick={() => deleteHandler(repairStore._id)}>
-                Delete
-              </button>
-
-              <button onClick={() => EditHandler(repairStore._id)}>Edit</button>
-            </>
-          )}
-
-          {isLoaded && (
-            <GoogleMap
-              mapContainerStyle={containerStyle}
-              zoom={zoom}
-              onLoad={onLoad}
-              center={repairStore.location}>
-              <Marker
-                position={repairStore.lotation}
-                label="R"
-              />
-
-            
-            </GoogleMap>
-          )}
-        </div>
-      )}
-
-      <Link to="/repairstore">Back to Repair Stores</Link>
+        {repairStore && (
+          <Flex justify="flex-start" p={4}>
+            <Box w={{ base: "100%", md: "70%", lg: "50%" }} p={4} borderWidth={2} borderRadius="md" boxShadow="md">
+              <form>
+                <Stack spacing={4}>
+                  <FormControl id="type" isReadOnly>
+                    <FormLabel>Name</FormLabel>
+                    <Input type="text" value={repairStore.name || "No Name"} />
+                  </FormControl>
+                  <FormControl id="location" isReadOnly>
+                    <FormLabel>Location</FormLabel>
+                    <Input
+                      type="text"
+                      value={`Lat: ${repairStore.location?.lat || "No Lat"}, Lng: ${repairStore.location?.lng || "No Lng"}`}
+                    />
+                  </FormControl>
+                  {user._id === repairStore.creator && (
+                    <Flex mt={4}>
+                      <Button colorScheme="red" onClick={() => deleteHandler(repairStore._id)} mr={2}>
+                        Delete
+                      </Button>
+                      <Button colorScheme="green" onClick={() => EditHandler(repairStore._id)} mr={2}>
+                        Edit
+                      </Button>
+                      <Button colorScheme="gray" onClick={() => navigate("/repairstore")}>
+                        Back to Repair Stores
+                      </Button>
+                    </Flex>
+                  )}
+                </Stack>
+              </form>
+            </Box>
+          </Flex>
+        )}
+        {isLoaded && repairStore && (
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            zoom={zoom}
+            center={repairStore.location}>
+            <Marker
+              position={repairStore.location}
+              label="R"
+            />
+          </GoogleMap>
+        )}
+      </Box>
     </div>
   );
 };
 
 export default RepairStoreDetail;
+
+

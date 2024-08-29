@@ -12,6 +12,21 @@ import {
   Polyline,
 } from "@react-google-maps/api";
 
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  FormControl,
+  FormLabel,
+  Input,
+  Stack,
+  Textarea,
+  Heading,
+  useToast,
+  Select,
+} from "@chakra-ui/react";
+
 const containerStyle = {
   width: "100%",
   height: "calc(100vh - 80px)",
@@ -20,6 +35,7 @@ const containerStyle = {
 function AddRepairStore() {
   const [repairStore, setRepairStore] = useState([]);
   const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [map, setMap] = useState(null);
   const [location, setLocation] = useState(null);
@@ -135,21 +151,41 @@ function AddRepairStore() {
 
   return (
     <div>
-      <div className="bg-green-600 text-white py-4 px-6">
+      {/* <div className="bg-green-600 text-white py-4 px-6">
         <h1 className="text-3xl font-bold">Add Repair Store</h1>
-      </div>
+      </div> */}
+      <Box>
+    
+    <Center bg="green.600" color="white" py={3} mb={2}>
+      <Heading as="h1" size="xl">Add New Repair Store</Heading>
+    </Center>
+       <Flex justify="flex-start">
+        <Box w={{ base: "60%", md: "50%", lg: "30%" }} p={4} borderWidth={2} borderRadius="md" boxShadow="md">
       <form onSubmit={handleSubmit}>
-        <label>Name</label>
-        <input
+      <Stack spacing={4}>
+      <FormControl id="name" >
+       
+        <FormLabel>Name</FormLabel>
+        <Input
           type="text"
           name="name"
           value={name}
           onChange={handleName}
         />
-      
-        <button type="submit">Add Repair Store</button>
+          </FormControl>
+      <Button
+        colorScheme="red"
+          type="submit"
+          disabled={loading}>
+          Add Repair Store
+        </Button>
+        <Button colorScheme="green" onClick={() => navigate("/repairstore")}>
+        Back to Repair Stores
+        </Button>
+        </Stack>
       </form>
-
+      </Box>
+      </Flex>
       {isLoaded && (
         <GoogleMap
           mapContainerStyle={containerStyle}
@@ -180,6 +216,7 @@ function AddRepairStore() {
                 /> */}
         </GoogleMap>
       )}
+       </Box>
     </div>
   );
 }
