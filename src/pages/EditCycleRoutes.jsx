@@ -25,7 +25,6 @@ import {
   Select,
 } from "@chakra-ui/react";
 
-
 import CycleAPIService from "../services/cycle.api";
 
 const cycleService = new CycleAPIService();
@@ -46,8 +45,7 @@ function EditCycleRoute() {
   const [newStartLocation, setNewStartLocation] = useState(null);
   const [newEndLocation, setNewEndLocation] = useState(null);
 
-
-  const [dragging, setDragging]= useState(null);
+  const [dragging, setDragging] = useState(null);
 
   const [map, setMap] = useState(null);
   const [zoom, setZoom] = useState(10);
@@ -64,9 +62,9 @@ function EditCycleRoute() {
       setCycleRoute(response.data);
       setType(response.data.type);
       setStartLocation(response.data.startLocation);
-   
+
       setEndLocation(response.data.endLocation);
-     
+
       console.log(response.data);
     } catch (error) {
       console.log("error fetching the cycleroute", error);
@@ -89,15 +87,14 @@ function EditCycleRoute() {
     const lat = latLng.lat();
     const lng = latLng.lng();
 
-      setStartLocation({ lat, lng });
-      setEndLocation(null);
-    
+    setStartLocation({ lat, lng });
+    setEndLocation(null);
   };
 
-  const handleMarkerDragStart = (marker) => {
-    setDragging(marker); 
+  const handleMarkerDragStart = marker => {
+    setDragging(marker);
   };
-  const handleMarkerDragEnd = (event) => {
+  const handleMarkerDragEnd = event => {
     const newLocation = { lat: event.latLng.lat(), lng: event.latLng.lng() };
 
     if (dragging === "start") {
@@ -108,12 +105,12 @@ function EditCycleRoute() {
       setNewEndLocation(newLocation);
     }
 
-    setDragging(null); 
+    setDragging(null);
   };
 
   const handleSubmit = async event => {
     event.preventDefault();
-    
+
     if (
       !startLocation ||
       !startLocation.lat ||
@@ -189,98 +186,122 @@ function EditCycleRoute() {
   };
 
   const onLoad = React.useCallback(function callback(map) {
-    // This is just an example of getting and using the map instance!!! don't just blindly copy!
-  /*   const bounds = new window.google.maps.LatLngBounds(center);
-    map.fitBounds(bounds); */
+    const bounds = new window.google.maps.LatLngBounds(center);
+    map.fitBounds(bounds);
     setMap(map);
   }, []);
 
   return (
     <div>
-      <Center bg="green.600" color="white" py={3} mb={2}>
-      <Heading as="h1" size="xl">Edit Cycle Route</Heading>
+      <Center
+        bg="green.600"
+        color="white"
+        py={3}
+        mb={2}>
+        <Heading
+          as="h1"
+          size="xl">
+          Edit Cycle Route
+        </Heading>
       </Center>
-    
-      {/* <h2>edit Cycle Route</h2> */}
-      <Flex justify="flex-start">
-        <Box w={{ base: "60%", md: "50%", lg: "30%" }} p={4} borderWidth={2} borderRadius="md" boxShadow="md">
-      <form onSubmit={handleSubmit}>
-       {/*  <label>Type</label>
-        <input
-          type="text"
-          name="type"
-          value={type}
-          onChange={handleType}
-        /> */}
-        <Stack spacing={4}>
-              <FormControl id="type" isRequired>
+
+      <Flex
+        justify="flex-start"
+        p={4}>
+        <Box
+          bg="green.100"
+          w={{ base: "100%", md: "70%", lg: "50%" }}
+          p={4}
+          borderWidth={1}
+          boxShadow="xl">
+          <form onSubmit={handleSubmit}>
+            <Stack spacing={4} >
+              <FormControl
+                id="type"
+                isRequired
+               >
                 <FormLabel>Type</FormLabel>
                 <Select
+                 bg="white" 
+                 p={8} 
+                 borderRadius="2px"
                   type="text"
-                  placeholder="Enter route type"
+               
                   value={type}
-                  onChange={(e) => setType(e.target.value)}
+                  onChange={e => setType(e.target.value)}
                   >
-                    <option value="Path"> Path</option>
-          <option value="Lane"> Lane</option>
-          <option value="Zone30"> Zone30</option>
-
-                    </Select>
-              
+                  <option value="Path"> Path</option>
+                  <option value="Lane"> Lane</option>
+                  <option value="Zone30"> Zone30</option>
+                </Select>
               </FormControl>
+              <Flex
+                mt={4}
+                justifyContent={"center"}>
+                <Button
+                  type="submit"
+                  colorScheme="green"
+                  mt={2}
+                  borderRadius="2px"
+                  mr={4}>
+                  Edit
+                </Button>
 
-              <Button type="submit" colorScheme="red" mt={4}>Edit Cycle Route</Button>
-        {/* <button type="submit">Edit Cycle Route</button> */}
-      {/* </form> */}
-      <Button
-                        colorScheme="gray"
-                        onClick={() => navigate("/cycleroutes")}>
-                        Back to Cycle Routes
-                      </Button>
-      </Stack>
+                <Button
+                  colorScheme="gray"
+                  onClick={() => navigate("/cycleroutes")}
+                  mt={2}
+                  mr={4}
+                  borderRadius="2px">
+                  Back
+                </Button>
+              </Flex>
+            </Stack>
           </form>
         </Box>
-      </Flex>
-      {isLoaded && (
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          zoom={zoom}
-          onLoad={onLoad}
-          onClick={handleMapClick}
-          center={center}>
-          {startLocation && (
-            <Marker
-              position={cycleroute.startLocation}
-              label="S"
-              draggable={true}
-              onDragStart={() => handleMarkerDragStart("start")}
-              onDragEnd={event => handleMarkerDragEnd(event, setStartLocation)}
-            />
-          )}
-          {endLocation && (
-          <Marker
-            position={cycleroute.endLocation}
-            label="E"
-            draggable={true}
-            onDragStart={() => handleMarkerDragStart("end")}
-              onDragEnd={event => handleMarkerDragEnd(event, setEndLocation)}
-          />
+
+        {isLoaded && (
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            zoom={zoom}
+            onLoad={onLoad}
+            onClick={handleMapClick}
+            center={center}>
+            {startLocation && (
+              <Marker
+                position={cycleroute.startLocation}
+                label="S"
+                draggable={true}
+                onDragStart={() => handleMarkerDragStart("start")}
+                onDragEnd={event =>
+                  handleMarkerDragEnd(event, setStartLocation)
+                }
+              />
+            )}
+            {endLocation && (
+              <Marker
+                position={cycleroute.endLocation}
+                label="E"
+                draggable={true}
+                onDragStart={() => handleMarkerDragStart("end")}
+                onDragEnd={event => handleMarkerDragEnd(event, setEndLocation)}
+              />
+            )}
+            {startLocation && endLocation && (
+              <Polyline
+                path={[startLocation, endLocation]}
+                options={{ strokeColor: "#FF7F50", strokeWeight: 5 }}
+              />
+            )}
+            {newStartLocation && newEndLocation && (
+              <Polyline
+                path={[newStartLocation, newEndLocation]}
+                options={{ strokeColor: "#2ecc71", strokeWeight: 5 }}
+              />
+            )}
+          </GoogleMap>
         )}
-          {startLocation && endLocation && (
-            <Polyline
-              path={[startLocation, endLocation]}
-              options={{ strokeColor: "#FF7F50", strokeWeight: 5 }}
-            />
-          )}
-          {newStartLocation && newEndLocation && (
-            <Polyline
-              path={[newStartLocation, newEndLocation]}
-              options={{ strokeColor: "#2ecc71", strokeWeight: 5 }}
-            />
-          )}
-          
-        </GoogleMap>
-      )}
+      </Flex>
     </div>
   );
 }

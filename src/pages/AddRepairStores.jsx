@@ -39,7 +39,7 @@ function AddRepairStore() {
 
   const [map, setMap] = useState(null);
   const [location, setLocation] = useState(null);
- 
+
   const [zoom, setZoom] = useState(10);
   const [polylineCreated, setPolylineCreated] = useState(false);
 
@@ -50,7 +50,6 @@ function AddRepairStore() {
     setName(event.target.value);
   };
 
-
   const handleMapClick = event => {
     const { latLng } = event;
     const lat = latLng.lat();
@@ -60,11 +59,8 @@ function AddRepairStore() {
       setLocation({ lat, lng });
     } else {
       setLocation({ lat, lng });
-      
     }
   };
-
- 
 
   const handleMarkerDragEnd = (event, setLocation) => {
     setLocation({ lat: event.latLng.lat(), lng: event.latLng.lng() });
@@ -72,11 +68,7 @@ function AddRepairStore() {
 
   const handleSubmit = async event => {
     event.preventDefault();
-    if (
-      !location ||
-      !location.lat ||
-      !location.lng 
-    ) {
+    if (!location || !location.lat || !location.lng) {
       //
       alert("Please select both start and end locations.");
       return;
@@ -92,11 +84,11 @@ function AddRepairStore() {
           }, */
       const repairStore = {
         name,
-       location: {
+        location: {
           lat: location.lat,
           lng: location.lng,
         },
-       
+
         userId: user._id,
       };
 
@@ -151,72 +143,88 @@ function AddRepairStore() {
 
   return (
     <div>
-      {/* <div className="bg-green-600 text-white py-4 px-6">
-        <h1 className="text-3xl font-bold">Add Repair Store</h1>
-      </div> */}
       <Box>
-    
-    <Center bg="green.600" color="white" py={3} mb={2}>
-      <Heading as="h1" size="xl">Add New Repair Store</Heading>
-    </Center>
-       <Flex justify="flex-start">
-        <Box w={{ base: "60%", md: "50%", lg: "30%" }} p={4} borderWidth={2} borderRadius="md" boxShadow="md">
-      <form onSubmit={handleSubmit}>
-      <Stack spacing={4}>
-      <FormControl id="name" >
-       
-        <FormLabel>Name</FormLabel>
-        <Input
-          type="text"
-          name="name"
-          value={name}
-          onChange={handleName}
-        />
-          </FormControl>
-      <Button
-        colorScheme="red"
-          type="submit"
-          disabled={loading}>
-          Add Repair Store
-        </Button>
-        <Button colorScheme="green" onClick={() => navigate("/repairstore")}>
-        Back to Repair Stores
-        </Button>
-        </Stack>
-      </form>
+        <Center
+          bg="green.600"
+          color="white"
+          py={3}
+          mb={2}>
+          <Heading
+            as="h1"
+            size="xl">
+            Add New Repair Store
+          </Heading>
+        </Center>
+        <Flex justify="flex-start"
+        p={4}>
+          <Box
+          bg="green.100"
+            w={{ base: "100%", md: "70%", lg: "50%" }}
+            p={4}
+            borderWidth={1}
+            boxShadow="xl">
+            <form onSubmit={handleSubmit}>
+              <Stack spacing={4}>
+                <FormControl id="name">
+                  <FormLabel>Name</FormLabel>
+                  <Input
+                  bg="white"
+                  p={6}
+                  borderRadius="2px"
+                    type="text"
+                    name="name"
+                    value={name}
+                    onChange={handleName}
+                  />
+                </FormControl>
+
+                <Flex
+                  mt={4}
+                  justifyContent={"center"}>
+                <Button
+                  colorScheme="green"
+                  type="submit"
+                  disabled={loading}
+                  mt={2}
+                  borderRadius="2px"
+                  mr={4}>
+                  Add 
+                </Button>
+                <Button
+                  colorScheme="gray"
+                  onClick={() => navigate("/repairstore")}
+                  mt={2}
+                    borderRadius="2px"
+                    mr={4}>
+                  Back
+                </Button>
+                </Flex>
+              </Stack>
+            </form>
+          </Box>
+      
+        {isLoaded && (
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            zoom={zoom}
+            onLoad={onLoad}
+            onClick={handleMapClick}
+            center={center}>
+
+            {location && (
+              <Marker
+                position={location}
+                label="R"
+                draggable={true}
+                onDragEnd={event => handleMarkerDragEnd(event, setLocation)}
+              />
+            )}
+
+            
+          </GoogleMap>
+        )}
+        </Flex>
       </Box>
-      </Flex>
-      {isLoaded && (
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          zoom={zoom}
-          onLoad={onLoad}
-          onClick={handleMapClick}
-          center={center}>
-          {location && (
-            <Marker
-              position={location}
-              label="R"
-              draggable={true}
-              onDragEnd={event => handleMarkerDragEnd(event, setLocation)}
-            />
-          )}
-         
-         
-          {/* <Marker
-                  position={null}
-                  label="Início"
-                />
-                <Marker
-                  position={null}
-                  label="Fim"
-                />
-                <Polyline
-                  options={{ strokeColor: "#FF0000", strokeWeight: 2 }}
-                /> */}
-        </GoogleMap>
-      )}
-       </Box>
     </div>
   );
 }

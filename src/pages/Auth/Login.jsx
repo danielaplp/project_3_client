@@ -110,7 +110,7 @@ function Login() {
 
         </form> */
 
-    /*   {errorMessage && <p>{errorMessage}</p>}
+/*   {errorMessage && <p>{errorMessage}</p>}
     </div>
   );
 }
@@ -142,13 +142,13 @@ function Login() {
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async event => {
     event.preventDefault();
 
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/auth/login`,
-        { email, password }
+        { email, password },
       );
 
       storeToken(response.data.authToken);
@@ -162,54 +162,67 @@ function Login() {
   };
 
   return (
-    <Flex justify="center" align="center" height="100vh" bg="gray.50">
+    <Flex
+      justify="center"
+      align="center"
+      height="100vh"
+      bg="green.600">
       <Box
         w={{ base: "90%", md: "50%", lg: "30%" }}
         p={8}
         borderWidth={1}
-        borderRadius="lg"
-        boxShadow="lg"
-        bg="white"
-      >
+        boxShadow="xl"
+        bg="white">
         <form onSubmit={handleSubmit}>
           <Stack spacing={4}>
-            <FormControl id="email" isRequired>
+            <FormControl
+              id="email"
+              isRequired>
               <FormLabel>Email</FormLabel>
               <Input
                 type="email"
                 placeholder="Enter email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
               />
             </FormControl>
 
-            <FormControl id="password" isRequired>
+            <FormControl
+              id="password"
+              isRequired>
               <FormLabel>Password</FormLabel>
               <Input
                 type="password"
                 placeholder="Enter password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
               />
             </FormControl>
 
-            <Button type="submit" colorScheme="green" width="full" mt={4}>
+            <Button
+              borderRadius="2px"
+              type="submit"
+              colorScheme="green"
+              width="full"
+              mt={4}>
               Login
             </Button>
 
             <Button
               variant="link"
               colorScheme="green"
+              color="red.400"
               onClick={() => navigate("/signup")}
-              width="full"
-            >
+              width="full">
               Don't have an account?
             </Button>
           </Stack>
         </form>
 
         {errorMessage && (
-          <Alert status="error" mt={4}>
+          <Alert
+            status="error"
+            mt={4}>
             <AlertIcon />
             {errorMessage}
           </Alert>

@@ -72,12 +72,15 @@ const ParkingDetail = () => {
     lng: -9.146005938990468,
   };
 
-  const onLoad = React.useCallback(function callback(map) {
-    if (!parking) return;
-    const bounds = new window.google.maps.LatLngBounds(center);
-    map.fitBounds(bounds);
-    setMap(map);
-  }, [parking]);
+  const onLoad = React.useCallback(
+    function callback(map) {
+      if (!parking) return;
+      const bounds = new window.google.maps.LatLngBounds(center);
+      map.fitBounds(bounds);
+      setMap(map);
+    },
+    [parking],
+  );
 
   useEffect(() => {
     getSingleParking(parkingId);
@@ -111,19 +114,13 @@ const ParkingDetail = () => {
         {parking && (
           <Flex
             justify="flex-start"
-            p={4}
-            direction={{ base: "column", md: "row" }}
-            align="flex-start"
-            gap={6}
-          >
-            {/* Formulário */}
+            p={4}>
             <Box
-              w={{ base: "100%", md: "50%" }}
+             bg="green.100"
+              w={{ base: "100%", md: "50%", lg: "50%" }}
               p={4}
-              borderWidth={2}
-              borderRadius="md"
-              boxShadow="md"
-            >
+              borderWidth={1}
+              boxShadow="xl">
               <form>
                 <Stack spacing={4}>
                   <FormControl
@@ -131,6 +128,9 @@ const ParkingDetail = () => {
                     isReadOnly>
                     <FormLabel>Type</FormLabel>
                     <Input
+                    bg="white" 
+                    p={6} 
+                    borderRadius="2px"
                       type="text"
                       value={parking.type || "No Type"}
                     />
@@ -141,6 +141,9 @@ const ParkingDetail = () => {
                     isReadOnly>
                     <FormLabel>Location</FormLabel>
                     <Input
+                    bg="white" 
+                    p={6} 
+                    borderRadius="2px"
                       type="text"
                       value={`Lat: ${parking.location?.lat || "No Lat"}, Lng: ${
                         parking.location?.lng || "No Lng"
@@ -153,6 +156,9 @@ const ParkingDetail = () => {
                     isReadOnly>
                     <FormLabel>Quantity</FormLabel>
                     <Input
+                    bg="white" 
+                    p={6} 
+                    borderRadius="2px"
                       type="text"
                       value={parking.quantity || "No Quantity"}
                     />
@@ -163,6 +169,9 @@ const ParkingDetail = () => {
                     isReadOnly>
                     <FormLabel>Parking Picture</FormLabel>
                     <Input
+                    bg="white" 
+                    p={6} 
+                    borderRadius="2px"
                       type="text"
                       value={parking.parkingPic || "No Picture"}
                     />
@@ -173,18 +182,21 @@ const ParkingDetail = () => {
                       <Button
                         colorScheme="red"
                         onClick={() => deleteHandler(parking._id)}
-                        mr={2}>
+                        mr={2}
+                        borderRadius='2px'>
                         Delete
                       </Button>
                       <Button
                         colorScheme="green"
                         onClick={() => EditHandler(parking._id)}
-                        mr={2}>
+                        mr={2}
+                        borderRadius='2px'>
                         Edit
                       </Button>
                       <Button
                         colorScheme="gray"
-                        onClick={() => navigate("/parking")}>
+                        onClick={() => navigate("/parking")}
+                        borderRadius='2px'>
                         Back
                       </Button>
                     </Flex>
@@ -192,32 +204,25 @@ const ParkingDetail = () => {
                 </Stack>
               </form>
             </Box>
-
-            {/* Mapa */}
-            {isLoaded && parking && (
-              <Box
-                w={{ base: "100%", md: "50%" }}
-                h="calc(100vh - 80px)"
-                borderWidth={2}
-                borderRadius="md"
-                boxShadow="md"
-              >
-                <GoogleMap
-                  mapContainerStyle={containerStyle}
-                  zoom={zoom}
-                  center={parking.location}
-                  onLoad={onLoad}
-                >
-                  <Marker
-                    position={parking.location}
-                    label="P"
-                  />
-                  <Polyline
-                    path={[parking.location]}
-                    options={{ strokeColor: "#FF0000", strokeWeight: 2 }}
-                  />
-                </GoogleMap>
-              </Box>
+            {isLoaded && (
+              <GoogleMap
+                mapContainerStyle={containerStyle}
+                zoom={zoom}
+                center={center}
+                onLoad={onLoad}>
+                {parking.location && (
+                  <>
+                    <Marker
+                      position={parking.location}
+                      label="P"
+                    />
+                    <Polyline
+                      path={[parking.location]}
+                      options={{ strokeColor: "#FF0000", strokeWeight: 2 }}
+                    />
+                  </>
+                )}
+              </GoogleMap>
             )}
           </Flex>
         )}

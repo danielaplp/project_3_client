@@ -110,9 +110,17 @@ function Parkings() {
             Parkings
           </Heading>
           <Link to={"/parking/new"}>
-            <Button py={5}>Add New</Button>
+            <Button py={5}
+            bg="green.100"
+            mt={2}
+            borderRadius="2px"
+            mr={4}
+            fontSize="20px">+</Button>
           </Link>
         </Stack>
+        <Flex
+            justify="flex-start"
+            p={4}>
         {isLoaded && (
           <GoogleMap
             mapContainerStyle={containerStyle}
@@ -138,6 +146,7 @@ function Parkings() {
             )}
           </GoogleMap>
         )}
+        </Flex>
       </Box>
       {/* Lista de Links para cada estacionamento (opcional) */}
       <div>

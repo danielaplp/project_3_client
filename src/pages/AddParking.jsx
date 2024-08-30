@@ -59,9 +59,8 @@ function AddParking() {
     const lat = latLng.lat();
     const lng = latLng.lng();
 
-    console.log({ lat, lng})
-      setLocation({ lat, lng });
-    
+    console.log({ lat, lng });
+    setLocation({ lat, lng });
   };
 
   const handleFileUpload = async event => {
@@ -137,7 +136,6 @@ function AddParking() {
   };
 
   const onLoad = React.useCallback(function callback(map) {
-    
     const bounds = new window.google.maps.LatLngBounds(center);
     map.fitBounds(bounds);
     setMap(map);
@@ -152,84 +150,104 @@ function AddParking() {
 
   return (
     <div>
-    {/* <div className="bg-green-600 text-white py-4 px-6">
-        <h1 className="text-3xl font-bold">Add Parking</h1>
-      </div> */}
       <Box>
-    
-    <Center bg="green.600" color="white" py={3} mb={2}>
-      <Heading as="h1" size="xl">Add New Parking</Heading>
-    </Center>
-       <Flex justify="flex-start">
-        <Box w={{ base: "60%", md: "50%", lg: "30%" }} p={4} borderWidth={2} borderRadius="md" boxShadow="md">
-      <form onSubmit={handleSubmit}>
-      <Stack spacing={4}>
-      <FormControl id="type" >
-        {/* <label>Type</label> */}
-        <FormLabel>Type</FormLabel>
-        <Input
-          type="text"
-          name="type"
-          value={type}
-          onChange={handleType}
-        />
+        <Center
+          bg="green.600"
+          color="white"
+          py={3}
+          mb={2}>
+          <Heading
+            as="h1"
+            size="xl">
+            Add New Parking
+          </Heading>
+        </Center>
 
-        {/* <label>Start Location</label>
-      <input type="number" name="start location" value={startLocationLat} onChange={handleStartLocationLat}></input>
-      <input type="number" name="start location" value={startLocationLng} onChange={handleStartLocationLng}></input>
-      
-      
-      <label>End Location</label>
-      <input type="number" name="end location" value={endLocationLat} onChange={handleEndLocationLat}></input>
-      <input type="number" name="end location" value={endLocationLng} onChange={handleEndLocationLng}></input>
- */}
-        <FormLabel>Quantity</FormLabel>
-        <Input
-          type="number"
-          name="quantity"
-          value={quantity}
-          onChange={handleQuantity}></Input>
+        <Flex
+          justify="flex-start"
+          p={4}>
+          <Box
+            bg="green.100"
+            w={{ base: "100%", md: "70%", lg: "50%" }}
+            p={4}
+            borderWidth={1}
+            boxShadow="xl">
+            <form onSubmit={handleSubmit}>
+              <Stack spacing={4}>
+                <FormControl id="type">
+                  <FormLabel>Type</FormLabel>
+                  <Input
+                    bg="white"
+                    p={6}
+                    borderRadius="2px"
+                    type="text"
+                    name="type"
+                    value={type}
+                    onChange={handleType}
+                  />
+                  <FormLabel>Quantity</FormLabel>
+                  <Input
+                    bg="white"
+                    p={6}
+                    borderRadius="2px"
+                    type="number"
+                    name="quantity"
+                    value={quantity}
+                    onChange={handleQuantity}></Input>
 
-        <FormLabel>Picture</FormLabel>
-        <Input
-          type="file"
-          name="imgUrl"
-          onChange={handleFileUpload}></Input>
-           </FormControl>
+                  <FormLabel>Picture</FormLabel>
+                  <Input
+                    type="file"
+                    name="imgUrl"
+                    onChange={handleFileUpload}>
+                    </Input>
+                </FormControl>
 
-        <Button
-        colorScheme="red"
-          type="submit"
-          disabled={loading}>
-          Add Parking
-        </Button>
-        <Button colorScheme="green" onClick={() => navigate("/parking")}>
-        Back to Parkings
-        </Button>
-        </Stack>
-          </form>
-        </Box>
-      </Flex>
+                <Flex
+                  mt={4}
+                  justifyContent={"center"}>
+                  <Button
+                    colorScheme="green"
+                    type="submit"
+                    disabled={loading}
+                    mt={2}
+                    borderRadius="2px"
+                    mr={4}>
+                    Add
+                  </Button>
+                  <Button
+                    colorScheme="gray"
+                    onClick={() => navigate("/parking")}
+                    mt={2}
+                    borderRadius="2px"
+                    mr={4}>
+                    Back
+                  </Button>
+                </Flex>
+              </Stack>
+            </form>
+          </Box>
+       
 
-      {isLoaded && (
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          zoom={zoom}
-          onLoad={onLoad}
-          onClick={handleMapClick}
-          center={center}>
+        {isLoaded && (
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            zoom={zoom}
+            onLoad={onLoad}
+            onClick={handleMapClick}
+            center={center}>
+
             {location && (
-          <Marker
-            position={location}
-            label="P"
-            draggable={true}
-              onDragEnd={event => handleMarkerDragEnd(event, setLocation)}
-          />
+              <Marker
+                position={location}
+                label="P"
+                draggable={true}
+                onDragEnd={event => handleMarkerDragEnd(event, setLocation)}
+              />
             )}
-          
-          
-        </GoogleMap>
-      )}
+          </GoogleMap>
+        )}
+         </Flex>
       </Box>
     </div>
   );

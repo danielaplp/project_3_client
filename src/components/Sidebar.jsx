@@ -26,11 +26,11 @@ function Sidebar() {
       
       <Button
         ref={btnRef}
-        colorScheme="green"
+        colorScheme="red"
         onClick={onOpen}
          variant="ghost"
          className="mr-4"
-         leftIcon={<HamburgerIcon boxSize={8} />
+         leftIcon={<HamburgerIcon boxSize={8} color="#F56565" />
         
         }
         >
@@ -63,6 +63,7 @@ function Sidebar() {
                     to="/"
                     onClick={onClose}>
                     <Button
+                      borderRadius="2px"
                       w="full"
                       textAlign="left"
                       bg="white"
@@ -79,6 +80,7 @@ function Sidebar() {
                         to="/cycleroutes"
                         onClick={onClose}>
                         <Button
+                          borderRadius="2px"
                           w="full"
                           textAlign="left"
                           bg="white"
@@ -88,25 +90,13 @@ function Sidebar() {
                         </Button>
                       </Link>
                     </li>
-                   {/*  <li>
-                      <Link
-                        to="/cycleroutes/new"
-                        onClick={onClose}>
-                        <Button
-                          w="full"
-                          textAlign="left"
-                          bg="white"
-                          color="green.600"
-                          variant="solid">
-                          Add a Cycle Route
-                        </Button>
-                      </Link>
-                    </li> */}
+              
                     <li>
                       <Link
                         to="/parking"
                         onClick={onClose}>
                         <Button
+                          borderRadius="2px"
                           w="full"
                           textAlign="left"
                           bg="white"
@@ -116,25 +106,13 @@ function Sidebar() {
                         </Button>
                       </Link>
                     </li>
-                    {/* <li>
-                      <Link
-                        to="/parking/new"
-                        onClick={onClose}>
-                        <Button
-                          w="full"
-                          textAlign="left"
-                          bg="white"
-                          color="green.600"
-                          variant="solid">
-                          Add a Parking
-                        </Button>
-                      </Link>
-                    </li> */}
+                   
                     <li>
                       <Link
                         to="/repairstore"
                         onClick={onClose}>
                         <Button
+                          borderRadius="2px"
                           w="full"
                           textAlign="left"
                           bg="white"
@@ -144,30 +122,18 @@ function Sidebar() {
                         </Button>
                       </Link>
                     </li>
-                    {/* <li>
-                      <Link
-                        to="/repairstore/new"
-                        onClick={onClose}>
-                        <Button
-                          w="full"
-                          textAlign="left"
-                          bg="white"
-                          color="green.600"
-                          variant="solid">
-                          Add a Repair Store
-                        </Button>
-                      </Link>
-                    </li> */}
+           
                     <li>
                       <Button
+                        borderRadius="2px"
                         onClick={() => {
                           logout();
                           onClose();
                         }}
                         w="full"
                         textAlign="left"
-                        bg="white"
-                        color="green.600"
+                        bg="red.400"
+                        color="white"
                         variant="solid">
                         Logout
                       </Button>
@@ -181,6 +147,7 @@ function Sidebar() {
                         to="/signup"
                         onClick={onClose}>
                         <Button
+                         borderRadius="2px"
                           w="full"
                           textAlign="left"
                           bg="white"
@@ -195,10 +162,11 @@ function Sidebar() {
                         to="/login"
                         onClick={onClose}>
                         <Button
+                         borderRadius="2px"
                           w="full"
                           textAlign="left"
-                          bg="white"
-                          color="green.600"
+                          bg="red.400"
+                          color="white"
                           variant="solid">
                           Login
                         </Button>

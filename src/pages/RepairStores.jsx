@@ -111,10 +111,17 @@ function RepairStores() {
             Repair Stores
           </Heading>
           <Link to={"/repairstore/new"}>
-            <Button py={5}>Add New</Button>
+            <Button py={5}
+            bg="green.100"
+            mt={2}
+            borderRadius="2px"
+            mr={4}
+            fontSize="20px">+</Button>
           </Link>
         </Stack>
-
+        <Flex
+            justify="flex-start"
+            p={4}>
         {isLoaded && (
           <GoogleMap
             mapContainerStyle={containerStyle}
@@ -141,6 +148,7 @@ function RepairStores() {
             )}
           </GoogleMap>
         )}
+        </Flex>
       </Box>
       {/* List of repair stores with links */}
       <div>

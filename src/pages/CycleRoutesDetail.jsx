@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect, useContext } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -130,11 +128,11 @@ const CycleRoutesDetail = () => {
             justify="flex-start"
             p={4}>
             <Box
+             bg="green.100"
               w={{ base: "100%", md: "70%", lg: "50%" }}
               p={4}
-              borderWidth={2}
-              borderRadius="md"
-              boxShadow="md">
+              borderWidth={1}
+              boxShadow="xl">
               <form>
                 <Stack spacing={4}>
                   <FormControl
@@ -142,6 +140,9 @@ const CycleRoutesDetail = () => {
                     isReadOnly>
                     <FormLabel>Type</FormLabel>
                     <Input
+                    bg="white" 
+                    p={6} 
+                    borderRadius="2px"
                       type="text"
                       value={
                         cycleRoute.type}
@@ -152,6 +153,9 @@ const CycleRoutesDetail = () => {
                     isReadOnly>
                     <FormLabel>Start Location</FormLabel>
                     <Input
+                    bg="white" 
+                    p={6} 
+                    borderRadius="2px"
                       type="text"
                       value={`Lat: ${
                         cycleRoute.startLocation?.lat || "No Lat"
@@ -164,6 +168,9 @@ const CycleRoutesDetail = () => {
                     isReadOnly>
                     <FormLabel>End Location</FormLabel>
                     <Input
+                    bg="white" 
+                    p={6} 
+                    borderRadius="2px"
                       type="text"
                       value={`Lat: ${
                         cycleRoute.endLocation?.lat || "No Lat"
@@ -176,18 +183,22 @@ const CycleRoutesDetail = () => {
                       <Button
                         colorScheme="red"
                         onClick={() => deleteHandler(cycleRoute._id)}
-                        mr={2}>
+                        mr={2}
+                        borderRadius='2px'
+                        >
                         Delete
                       </Button>
                       <Button
                         colorScheme="green"
                         onClick={() => EditHandler(cycleRoute._id)}
-                        mr={2}>
+                        mr={2}
+                        borderRadius='2px'>
                         Edit
                       </Button>
                       <Button
                         colorScheme="gray"
-                        onClick={() => navigate("/cycleroutes")}>
+                        onClick={() => navigate("/cycleroutes")}
+                        borderRadius='2px'>
                         Back 
                       </Button>
                     </Flex>
@@ -201,7 +212,8 @@ const CycleRoutesDetail = () => {
             mapContainerStyle={containerStyle}
             zoom={zoom}
             center={center}
-            onLoad={onLoad}>
+            onLoad={onLoad}
+            >
 
             {cycleRoute.startLocation && (
               <>

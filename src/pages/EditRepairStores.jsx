@@ -31,8 +31,8 @@ import CycleAPIService from "../services/cycle.api";
 const cycleService = new CycleAPIService();
 
 const containerStyle = {
-  width: "112%",
-  height: "100vh",
+  width: "100%",
+  height: "calc(100vh - 80px)",
 };
 
 function EditRepairStore() {
@@ -42,7 +42,6 @@ function EditRepairStore() {
   const [repairStore, setRepairStore] = useState(null);
   const [name, setName] = useState("");
   const [location, setLocation] = useState(null);
-
 
   const [loading, setLoading] = useState(false);
   const [map, setMap] = useState(null);
@@ -60,14 +59,13 @@ function EditRepairStore() {
       setRepairStore(response.data);
       setName(response.data.name);
       setLocation(response.data.location);
-      
 
       console.log(response.data);
     } catch (error) {
       console.log("error fetching the repair store", error);
     }
   };
-  
+
   useEffect(() => {
     getSingleRepairStore(repairStoreId);
     setTimeout(() => {
@@ -88,9 +86,6 @@ function EditRepairStore() {
     setLocation({ lat, lng });
   };
 
- 
-  
-
   const handleSubmit = async event => {
     event.preventDefault();
 
@@ -98,7 +93,7 @@ function EditRepairStore() {
       const repairStore = {
         name,
         location,
-        
+
         userId: user._id,
       };
 
@@ -117,7 +112,9 @@ function EditRepairStore() {
 
   const deleteHandler = async _id => {
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/api/repairstore/${_id}`);
+      await axios.delete(
+        `${import.meta.env.VITE_API_URL}/api/repairstore/${_id}`,
+      );
       set(repairStore.filter(b => b._id !== _id));
       console.log(`Parking com ID ${_id} excluída `);
     } catch (error) {
@@ -145,67 +142,89 @@ function EditRepairStore() {
   return (
     <div>
       <Center
+     
         bg="green.600"
         color="white"
         py={3}
-        mb={2}>
+        mb={2}
+       >
         <Heading
           as="h1"
-          size="xl">
+          size="xl"
+          py={2}
+          px={6}>
           Edit Repair Store
         </Heading>
       </Center>
 
-      <Flex justify="flex-start">
+      <Flex
+        justify="flex-start"
+        p={4}>
         <Box
-          w={{ base: "60%", md: "50%", lg: "30%" }}
+        bg="green.100"
+          w={{ base: "100%", md: "70%", lg: "50%" }}
           p={4}
-          borderWidth={2}
-          borderRadius="md"
-          boxShadow="md">
-
-      <form onSubmit={handleSubmit}>
-      <Stack spacing={4}>
+          borderWidth={1}
+          boxShadow="xl">
+          <form onSubmit={handleSubmit}>
+            <Stack spacing={4}>
               <FormControl
                 id="type"
                 isRequired>
                 <FormLabel>Name</FormLabel>
                 <Input
+                bg="white" 
+                p={6} 
+                borderRadius="2px"
                   type="text"
                   value={name}
                   onChange={e => setName(e.target.value)}
                 />
               </FormControl>
+              <Flex
+                mt={4}
+                justifyContent={"center"}>
               <Button
                 type="submit"
                 colorScheme="red"
-                mt={4}>
-                Edit Repair Store
+                mt={2}
+                borderRadius="2px"
+                mr={4}>
+                Edit
               </Button>
+
               <Button
                 colorScheme="gray"
-                onClick={() => navigate("/repairstore")}>
-                Back to Repair Stores
+                onClick={() => navigate("/repairstore")}
+                mt={2}
+                  mr={4}
+                  borderRadius="2px">
+                Back 
               </Button>
-              </Stack>
-     
-      </form>
-      </Box>
-      </Flex>
+              </Flex>
+            </Stack>
+          </form>
+        </Box>
+      
+
       {isLoaded && (
         <GoogleMap
           mapContainerStyle={containerStyle}
           zoom={zoom}
           onLoad={onLoad}
-          onClick={handleMapClick}>
-          <Marker
-            position={location}
-            label="P"
-          />
+          onClick={handleMapClick}
+          center={center}>
+            {location && (
+               <Marker
+               position={location}
+               label="P"
+             />
+            )}
 
           <Polyline options={{ strokeColor: "#FF0000", strokeWeight: 2 }} />
         </GoogleMap>
       )}
+       </Flex>
     </div>
   );
 }

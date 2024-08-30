@@ -35,7 +35,6 @@ const cycleService = new CycleAPIService();
 const containerStyle = {
   width: "100%",
   height: "calc(100vh - 80px)",
-
 };
 
 function CycleRoutes() {
@@ -117,48 +116,59 @@ function CycleRoutes() {
           </Heading>
 
           <Link to={"/cycleroutes/new"}>
-            <Button py={5}>Add New</Button>
+            <Button
+              py={5}
+              bg="green.100"
+              mt={2}
+              borderRadius="2px"
+              mr={4}
+              fontSize="20px">
+              +
+            </Button>
           </Link>
         </Stack>
+        <Flex
+          justify="flex-start"
+          p={4}>
+          {isLoaded && (
+            <GoogleMap
+              mapContainerStyle={containerStyle}
+              zoom={zoom}
+              onLoad={onLoad}
+              center={center}>
+              {cycleRoutes.map(cycleroute => (
+                <React.Fragment key={cycleroute._id}>
+                  <Marker
+                    position={cycleroute.startLocation}
+                    label="S"
+                    onClick={() => handleRouteClick(cycleroute._id)}
+                  />
 
-        {isLoaded && (
-          <GoogleMap
-            mapContainerStyle={containerStyle}
-            zoom={zoom}
-            onLoad={onLoad}
-            center={center}>
-            {cycleRoutes.map(cycleroute => (
-              <React.Fragment key={cycleroute._id}>
-                <Marker
-                  position={cycleroute.startLocation}
-                  label="S"
-                  onClick={() => handleRouteClick(cycleroute._id)}
+                  <Marker
+                    position={cycleroute.endLocation}
+                    label="E"
+                    onClick={() => handleRouteClick(cycleroute._id)}
+                  />
+
+                  <Polyline
+                    path={[cycleroute.startLocation, cycleroute.endLocation]}
+                    options={{ strokeColor: "#2ecc71", strokeWeight: 5 }}
+                    onMouseOver={() => handlePolylineMouseOver(cycleroute)}
+                    onMouseOut={handlePolylineMouseOut}
+                    onClick={() => handleRouteClick(cycleroute._id)}
+                  />
+                </React.Fragment>
+              ))}
+
+              {selectedRoute && (
+                <DetailCardRoutes
+                  route={selectedRoute}
+                  onClose={() => setSelectedRoute(null)}
                 />
-
-                <Marker
-                  position={cycleroute.endLocation}
-                  label="E"
-                  onClick={() => handleRouteClick(cycleroute._id)}
-                />
-
-                <Polyline
-                  path={[cycleroute.startLocation, cycleroute.endLocation]}
-                  options={{ strokeColor: "#2ecc71", strokeWeight: 5 }}
-                  onMouseOver={() => handlePolylineMouseOver(cycleroute)}
-                  onMouseOut={handlePolylineMouseOut}
-                  onClick={() => handleRouteClick(cycleroute._id)}
-                />
-              </React.Fragment>
-            ))}
-
-            {selectedRoute && (
-              <DetailCardRoutes
-                route={selectedRoute}
-                onClose={() => setSelectedRoute(null)}
-              />
-            )}
-          </GoogleMap>
-        )}
+              )}
+            </GoogleMap>
+          )}
+        </Flex>
       </Box>
 
       <div>

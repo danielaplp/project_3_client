@@ -31,8 +31,8 @@ import CycleAPIService from "../services/cycle.api";
 const cycleService = new CycleAPIService();
 
 const containerStyle = {
-  width: "112%",
-  height: "100vh",
+  width: "100%",
+  height: "calc(100vh - 80px)",
 };
 
 function EditParking() {
@@ -46,6 +46,7 @@ function EditParking() {
   const [quantity, setQuantity] = useState(0);
   const [parkingPic, setParkingPic] = useState("");
   const [currentImage, setCurrentImage] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [map, setMap] = useState(null);
   const [zoom, setZoom] = useState(10);
@@ -187,13 +188,15 @@ function EditParking() {
         </Heading>
       </Center>
 
-      <Flex justify="flex-start">
+      <Flex
+        justify="flex-start"
+        p={4}>
         <Box
-          w={{ base: "60%", md: "50%", lg: "30%" }}
+         bg="green.100"
+          w={{ base: "100%", md: "70%", lg: "50%" }}
           p={4}
-          borderWidth={2}
-          borderRadius="md"
-          boxShadow="md">
+          borderWidth={1}
+          boxShadow="xl">
           <form onSubmit={handleSubmit}>
             <Stack spacing={4}>
               <FormControl
@@ -201,6 +204,9 @@ function EditParking() {
                 isRequired>
                 <FormLabel>Type</FormLabel>
                 <Input
+                 bg="white" 
+                 p={6} 
+                 borderRadius="2px"
                   type="text"
                   value={type}
                   onChange={e => setType(e.target.value)}
@@ -212,6 +218,9 @@ function EditParking() {
                 isRequired>
                 <FormLabel>Quantity</FormLabel>
                 <Input
+                 bg="white" 
+                 p={6} 
+                 borderRadius="2px"
                   type="number"
                   value={quantity}
                   onChange={e => setQuantity(e.target.value)}
@@ -232,29 +241,39 @@ function EditParking() {
                   />
                 )}
               </FormControl>
-
+              <Flex
+                mt={4}
+                justifyContent={"center"}>
               <Button
                 type="submit"
                 colorScheme="red"
-                mt={4}>
-                Edit Parking
+                mt={2}
+                borderRadius="2px"
+                mr={4}>
+                Edit
               </Button>
+
               <Button
                 colorScheme="gray"
-                onClick={() => navigate("/parking")}>
-                Back to Parkings
+                onClick={() => navigate("/parking")}
+                mt={2}
+                  mr={4}
+                  borderRadius="2px">
+                Back 
               </Button>
+              </Flex>
             </Stack>
           </form>
         </Box>
-      </Flex>
+    
 
       {isLoaded && (
         <GoogleMap
           mapContainerStyle={containerStyle}
           zoom={zoom}
           onLoad={onLoad}
-          onClick={handleMapClick}>
+          onClick={handleMapClick}
+          center={center}>
           {location && (
             <Marker
               position={location}
@@ -269,6 +288,7 @@ function EditParking() {
           )}
         </GoogleMap>
       )}
+      </Flex>
     </div>
   );
 }
